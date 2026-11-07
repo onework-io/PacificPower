@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import MeetingsView from './MeetingsView.vue'
 import PmisWorkspace from './PmisWorkspace.vue'
 import { usePmisStore } from '@/stores/pmis'
 import plan from '@/data/assessmentPlan.json'
@@ -15,7 +16,7 @@ const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&(workStatus.
 const workStatus=ref('全部')
 const docs=computed(()=>plan.documents.filter(d=>JSON.stringify(d).toLowerCase().includes(query.value.toLowerCase())))
 const maxDay=computed(()=>basis.value==='P'?35:80)
-const tabs=[['home','角色工作台'],['issues','議題協調'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
+const tabs=[['home','角色工作台'],['issues','議題協調'],['meetings','會議與決策'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
 const selectedCode = ref<string | null>(null)
 const selectedTask = computed(() => plan.tasks.find(t => t.code === selectedCode.value))
 function related(id:string){return plan.tasks.filter(t=>pm.taskParts(t.code).includes(id)).map(t=>t.code).join('、')||'未關聯'}
@@ -61,6 +62,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 </div>
 <div class="body">
 <PmisWorkspace v-if="tab==='home'||tab==='issues'" :mode="tab" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" />
+<MeetingsView v-else-if="tab==='meetings'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
 <template v-else-if="tab==='wbs'||tab==='gantt'"><p>50 項末階工作／審查／節點。每週 5 工作日；P 與 WD 分開計時。T0 待確認，不換算日曆日期；此為來源草案基準，非實際進度。</p>
 <table><thead><tr><th>WBS</th><th>工作／審查與主責</th><th>{{basis}} 起–迄</th><th>日數</th><th>{{tab==='gantt'?`${basis}1 → ${basis}${maxDay}（每格5工作日）`:'交付／來源'}}</th></tr></thead><tbody><tr v-for="t in rows" :key="t.code" :class="{selected:selectedCode===t.code}" @click="selectTask(t.code)"><td>{{t.code}}</td><td><button class="task-link" :aria-pressed="selectedCode===t.code" @click.stop="selectTask(t.code)">{{t.name}}</button><small>{{taskParts(t.code).length ? `3D 關聯：${taskParts(t.code).length} 組元件` : '無實體元件對應'}}</small><small>{{t.owner}} · {{pm.state.work[t.code]?.status??'未開始'}}</small><button @click.stop="openDetail('task',t.code)">管理工作</button><small>{{plan.annotatedDependencies.filter(e=>e.target===t.code).map(e=>`${e.relation} ← ${e.source}`).join(' · ')}}</small></td><td>{{t.start}}–{{t.end}}</td><td>{{t.end-t.start+1}}</td><td v-if="tab==='gantt'"><div class="track" :style="{backgroundSize:`${500/maxDay}% 100%`}"><button :aria-label="`選取工項 ${t.code} 並查看 3D 關聯`" @click.stop="selectTask(t.code)" :class="{milestone:t.start===t.end,buffer:t.code==='3.6'||t.code==='0.2'}" :style="{left:`${(t.start-1)/maxDay*100}%`,width:`${(t.end-t.start+1)/maxDay*100}%`}" :title="`${t.name}：${basis}${t.start}–${t.end}`" /></div></td><td v-else>{{t.documents.join('、')||'—'}}<small>來源第 {{t.page}} 頁</small></td></tr></tbody></table><p>FS／SS 僅轉錄原表明示的跨項標註，非完整可運算網圖。同日 G0／K2 在修訂完成後確認，不額外推移一天。</p></template>
 <template v-else-if="tab==='documents'"><p>5 份商務文件＋16 份基本交付＋4 份另行選配。此處為交付要求清冊，文件尚未編製或驗收。</p><table><thead><tr><th>編號／交付</th><th>工作內容與主責</th><th>時點／格式</th></tr></thead><tbody><tr v-for="d in docs" :key="d.code"><td><button @click="openDetail('document',d.code)">{{d.code}} · 版本／審查</button><b>{{d.name}}</b><small>{{d.optional?'選配｜不納基本範圍與驗收':'基本範圍'}} · 來源第8頁</small></td><td>{{d.scope}}<small>{{d.owner}}</small></td><td>{{d.due}}<small>{{d.format}}</small></td></tr></tbody></table></template>
