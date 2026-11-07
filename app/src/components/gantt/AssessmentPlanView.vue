@@ -64,7 +64,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 </div>
 <div class="body">
 <PmisWorkspace @open-inspections="tab='inspections'" v-if="tab==='home'||tab==='issues'" :mode="tab" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" />
-<DeliveryView v-else-if="tab==='delivery'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @navigate="target=>tab=target" />
+<DeliveryView @open-issue="id=>openDetail('issue',id)" v-else-if="tab==='delivery'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @navigate="target=>tab=target" />
 <InspectionsView v-else-if="tab==='inspections'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
 <MeetingsView v-else-if="tab==='meetings'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
 <template v-else-if="tab==='wbs'||tab==='gantt'"><p>50 項末階工作／審查／節點。每週 5 工作日；P 與 WD 分開計時。T0 待確認，不換算日曆日期；此為來源草案基準，非實際進度。</p>
