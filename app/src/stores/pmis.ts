@@ -1,3 +1,4 @@
+import { validateInspection, validateInspectionSubmission, type Inspection } from '@/lib/inspections'
 import { computed, ref, watch } from 'vue'
 import plan from '@/data/assessmentPlan.json'
 import { PARTS } from '@/data/parts'
@@ -11,8 +12,8 @@ export interface Revision { id:string; code:string; version:string; title:string
 export interface Meeting { id:string; title:string; date:string; chair:string; attendees:string; agendaIds:string[]; minutes:string; decision:string; status:'草稿'|'已確認'; confirmedBy:string; confirmedAt:string }
 export interface Audit { id:string; at:string; actor:string; target:string; action:string; note:string }
 export interface Comment { id:string; at:string; actor:string; target:string; text:string }
-export interface State { meetings:Meeting[]; bindings:Record<string,string[]>; schema:1; work:Record<string,Work>; issues:Issue[]; revisions:Revision[]; audit:Audit[]; comments:Comment[] }
-export const emptyPmis = ():State => ({schema:1,meetings:[],bindings:{},work:{},issues:[],revisions:[],audit:[],comments:[]})
+export interface State { inspections:Inspection[]; meetings:Meeting[]; bindings:Record<string,string[]>; schema:1; work:Record<string,Work>; issues:Issue[]; revisions:Revision[]; audit:Audit[]; comments:Comment[] }
+export const emptyPmis = ():State => ({schema:1,inspections:[],meetings:[],bindings:{},work:{},issues:[],revisions:[],audit:[],comments:[]})
 export const defaultWork = ():Work => ({owner:'',reviewer:'',due:'',criteria:'',evidence:'',status:'未開始'})
 const transitions:Record<WorkStatus,WorkStatus[]> = {'未開始':['執行中'],'執行中':['待審查'],'待審查':['已接受','退回修訂'],'退回修訂':['執行中'],'已接受':['退回修訂']}
 export function checkReview(current:WorkStatus,next:WorkStatus,note:string) {
@@ -26,7 +27,7 @@ export const usePmisStore=defineStore('pmis',()=>{
  const key=()=>`pacificpower-pmis-v1:${project.value}`
  function load(id:string) {
   project.value='';state.value=emptyPmis();error.value='';readOnly=false
-  try { const raw=localStorage.getItem(`pacificpower-pmis-v1:${id}`);if(raw){const v=JSON.parse(raw);if(v.schema!==1||!v.work||!Array.isArray(v.issues)||!Array.isArray(v.revisions)||!Array.isArray(v.audit)||!Array.isArray(v.comments))throw new Error('格式不符');state.value={...v,bindings:v.bindings??{},meetings:v.meetings??[]}} }
+  try { const raw=localStorage.getItem(`pacificpower-pmis-v1:${id}`);if(raw){const v=JSON.parse(raw);if(v.schema!==1||!v.work||!Array.isArray(v.issues)||!Array.isArray(v.revisions)||!Array.isArray(v.audit)||!Array.isArray(v.comments))throw new Error('格式不符');state.value={...v,bindings:v.bindings??{},meetings:v.meetings??[],inspections:v.inspections??[]}} }
   catch {error.value='本機資料無法讀取；已停止寫入以保留原資料。請先備份並聯絡管理者。';readOnly=true}
   project.value=id
  }
@@ -40,6 +41,10 @@ export const usePmisStore=defineStore('pmis',()=>{
  function addRevision(data:Pick<Revision,'code'|'version'|'title'|'url'>){const author=identity();if(!data.version.trim()||!data.title.trim()||!safeReference(data.url))throw new Error('請填寫版本、修訂說明及有效的 HTTPS／HTTP 文件連結。');if(state.value.revisions.some(r=>r.code===data.code&&r.version===data.version.trim()))throw new Error('此文件版本已存在，請使用新的版本號');const r:Revision={...data,version:data.version.trim(),id:crypto.randomUUID(),author,status:'執行中',note:'',createdAt:new Date().toISOString()};state.value.revisions.unshift(r);log(data.code,`登錄文件 ${r.version}`,r.title)}
  function reviewRevision(id:string,next:WorkStatus,note:string){identity();const r=state.value.revisions.find(x=>x.id===id);if(!r)throw new Error('找不到文件版本');checkReview(r.status,next,note);r.status=next;r.note=note;log(r.code,`${r.version} → ${next}`,note)}
  function comment(target:string,text:string){const who=identity();if(!text.trim())throw new Error('留言不可空白');state.value.comments.push({id:crypto.randomUUID(),target,text:text.trim(),actor:who,at:new Date().toISOString()});log(target,'新增留言')}
+ function saveInspection(input:Inspection){identity();validateInspection(input);if(input.task&&!plan.tasks.some(t=>t.code===input.task)||input.asset&&!PARTS.some(p=>p.id===input.asset)||input.document&&!plan.documents.some(d=>d.code===input.document))throw new Error('查驗關聯不存在');const old=state.value.inspections.find(i=>i.id===input.id);if(old?.items.some(item=>item.issueId&&!input.items.some(x=>x.id===item.id)))throw new Error('不可移除已關聯缺失的查驗項目');if(old&&['待複核','已接受'].includes(old.status))throw new Error('請先退回查驗紀錄再編修');const value:Inspection=JSON.parse(JSON.stringify({...input,id:old?.id??crypto.randomUUID(),status:'草稿',reviewNote:old?.reviewNote??'',submittedBy:'',reviewedBy:''}));for(const item of value.items){item.issueId=old?.items.find(x=>x.id===item.id)?.issueId??''}if(old)Object.assign(old,value);else state.value.inspections.unshift(value);log(value.id,'儲存查驗草稿',value.title);return value.id}
+ function submitInspection(id:string){const who=identity();const i=state.value.inspections.find(x=>x.id===id);if(!i||!['草稿','退回'].includes(i.status))throw new Error('查驗紀錄不可送審');validateInspectionSubmission(i);i.status='待複核';i.submittedBy=who;log(id,'查驗送審',i.evidence)}
+ function reviewInspection(id:string,accept:boolean,note:string){const who=identity();const i=state.value.inspections.find(x=>x.id===id);if(!i||!(i.status==='待複核'||!accept&&i.status==='已接受')||!note.trim())throw new Error('請選擇可複核紀錄並填寫說明');if(accept){validateInspectionSubmission(i);if(i.items.some(x=>x.result==='不合格'))throw new Error('有不合格項目，需退回修正後重新送審');if(i.items.some(x=>x.issueId&&state.value.issues.find(y=>y.id===x.issueId)?.status!=='已結案'))throw new Error('關聯缺失尚未結案，不能接受')}log(id,accept?'接受查驗紀錄':'退回查驗紀錄',`${note}；結果快照：${JSON.stringify(i.items)}；證據：${i.evidence}`);i.status=accept?'已接受':'退回';i.reviewNote=note;i.reviewedBy=who}
+ function inspectionDefect(id:string,itemId:string,owner:string,due:string){identity();const i=state.value.inspections.find(x=>x.id===id),item=i?.items.find(x=>x.id===itemId);if(!i||!item||item.result!=='不合格'||i.status==='已接受')throw new Error('只有不合格查驗項目可轉缺失');if(item.issueId)throw new Error('此項已有缺失議題，請沿用原議題追蹤');if(!item.note.trim())throw new Error('請先儲存不合格說明');const issueId=createIssue({title:`查驗缺失：${item.label}`,type:'缺失',priority:'高',owner,due,task:i.task,asset:i.asset,document:i.document,description:`${i.title}／${item.label}：${item.note}；查驗依據：${i.basis}`});item.issueId=issueId;log(id,'建立查驗缺失',issueId);return issueId}
  function saveMeeting(input:Meeting){identity();if(!input.title.trim()||!input.date||!input.chair.trim())throw new Error('請填寫會議名稱、日期及主持人');if(input.agendaIds.some(id=>!state.value.issues.some(i=>i.id===id)))throw new Error('議題不存在');const existing=state.value.meetings.find(m=>m.id===input.id);if(existing?.status==='已確認')throw new Error('已確認紀錄需先重新開啟才能修改');const value:Meeting={...input,id:existing?.id??crypto.randomUUID(),agendaIds:[...new Set(input.agendaIds)],status:'草稿',confirmedBy:'',confirmedAt:''};if(existing)Object.assign(existing,value);else state.value.meetings.unshift(value);log(value.id,'儲存會議草稿',value.title);return value.id}
  function confirmMeeting(id:string){const who=identity();const m=state.value.meetings.find(x=>x.id===id);if(!m||m.status!=='草稿')throw new Error('找不到可確認的草稿');if(!m.attendees.trim()||!m.minutes.trim()||!m.decision.trim())throw new Error('確認前請填寫出席者、討論紀錄與決議');m.status='已確認';m.confirmedBy=who;m.confirmedAt=new Date().toISOString();log(id,'確認會議紀錄',m.decision)}
  function reopenMeeting(id:string,reason:string){identity();const m=state.value.meetings.find(x=>x.id===id);if(!m||m.status!=='已確認'||!reason.trim())throw new Error('重新開啟須選擇已確認會議並填寫原因');log(id,'重新開啟會議紀錄',`${reason}；原確認：${m.confirmedBy} ${m.confirmedAt}；原紀錄：${m.minutes}；原決議：${m.decision}`);m.status='草稿';m.confirmedAt='';m.confirmedBy=''}
@@ -49,7 +54,7 @@ export const usePmisStore=defineStore('pmis',()=>{
  function resetBinding(code:string,reason:string){identity();if(!reason.trim())throw new Error('請填寫恢復原因');delete state.value.bindings[code];log(code,'恢復預設 3D 評估關聯',reason)}
  function mergeBackup(backup:State){identity();const next=mergePmis(state.value,backup);next.audit.unshift({id:crypto.randomUUID(),at:new Date().toISOString(),actor:identity(),target:'project',action:'合併還原備份',note:'只新增未存在紀錄，未覆寫現有資料'});state.value=next}
  const pending=computed(()=>state.value.issues.filter(i=>i.status!=='已結案'))
- return {saveMeeting,confirmMeeting,reopenMeeting,addMeetingAction,taskParts,setBinding,resetBinding,mergeBackup,state,role,actor,error,project,pending,load,saveWork,transition,createIssue,moveIssue,addRevision,reviewRevision,comment}
+ return {saveInspection,submitInspection,reviewInspection,inspectionDefect,saveMeeting,confirmMeeting,reopenMeeting,addMeetingAction,taskParts,setBinding,resetBinding,mergeBackup,state,role,actor,error,project,pending,load,saveWork,transition,createIssue,moveIssue,addRevision,reviewRevision,comment}
 })
 
 // Validate imported backups before preview or mutation. Only known fields survive.
@@ -70,7 +75,8 @@ export function parsePmisBackup(raw:string,project:string):State {
  result.audit=array(v.audit).map(x=>fields(x,['id','at','actor','target','action','note']) as unknown as Audit)
  result.comments=array(v.comments).map(x=>fields(x,['id','at','actor','target','text']) as unknown as Comment)
  result.meetings=array(v.meetings??[]).map(x=>{const m=fields(x,['id','title','date','chair','attendees','minutes','decision','status','confirmedBy','confirmedAt']) as unknown as Meeting;if(!['草稿','已確認'].includes(m.status)||!Array.isArray(x.agendaIds)||x.agendaIds.some(id=>typeof id!=='string'||!result.issues.some(i=>i.id===id)))throw new Error('會議資料或關聯不符');m.agendaIds=[...new Set(x.agendaIds)] as string[];return m})
- for(const list of [result.meetings,result.issues,result.revisions,result.audit,result.comments])if(new Set(list.map(x=>x.id)).size!==list.length)throw new Error('備份含重複紀錄 ID')
+ result.inspections=array(v.inspections??[]).map(x=>{const i=fields(x,['id','title','date','inspector','reviewer','asset','task','document','basis','evidence','status','reviewNote','submittedBy','reviewedBy']) as unknown as Inspection;i.items=array(x.items).map(item=>{const row=fields(item,['id','label','result','note','issueId']) as unknown as Inspection['items'][number];if(!['未查驗','合格','不合格','不適用'].includes(row.result)||row.issueId&&!result.issues.some(y=>y.id===row.issueId))throw new Error('查驗結果或缺失關聯不符');return row});if(!['草稿','待複核','已接受','退回'].includes(i.status)||i.task&&!taskCodes.has(i.task)||i.asset&&!assetIds.has(i.asset)||i.document&&!docCodes.has(i.document))throw new Error('查驗狀態或關聯不符');validateInspection(i);if(['待複核','已接受'].includes(i.status))validateInspectionSubmission(i);if(i.status==='已接受'&&i.items.some(item=>item.result==='不合格'))throw new Error('已接受查驗含不合格結果');return i})
+ for(const list of [result.inspections,result.meetings,result.issues,result.revisions,result.audit,result.comments])if(new Set(list.map(x=>x.id)).size!==list.length)throw new Error('備份含重複紀錄 ID')
  if(new Set(result.revisions.map(x=>`${x.code}:${x.version}`)).size!==result.revisions.length)throw new Error('備份含重複文件版本')
  return result
 }
@@ -78,7 +84,7 @@ function same(a:unknown,b:unknown):boolean {if(a===b)return true;if(Array.isArra
 export function mergePmis(current:State,incoming:State):State {
  const result=JSON.parse(JSON.stringify(current)) as State
  for(const key of ['work','bindings'] as const){for(const [id,value] of Object.entries(incoming[key])){if(Object.hasOwn(result[key],id)&&!same(result[key][id],value))throw new Error(`既有 ${key} ${id} 與備份衝突，未匯入任何資料`);Object.assign(result[key],{[id]:value})}}
- for(const key of ['issues','revisions','audit','comments','meetings'] as const){for(const record of incoming[key]){const existing=result[key].find(x=>x.id===record.id);if(existing&&!same(existing,record))throw new Error(`紀錄 ${record.id} 衝突，未匯入任何資料`);if(!existing)(result[key] as Array<{id:string}>).push(record)}}
+ for(const key of ['issues','revisions','audit','comments','meetings','inspections'] as const){for(const record of incoming[key]){const existing=result[key].find(x=>x.id===record.id);if(existing&&!same(existing,record))throw new Error(`紀錄 ${record.id} 衝突，未匯入任何資料`);if(!existing)(result[key] as Array<{id:string}>).push(record)}}
  if(new Set(result.revisions.map(r=>`${r.code}:${r.version}`)).size!==result.revisions.length)throw new Error('文件版本號衝突，未匯入任何資料')
  return result
 }
