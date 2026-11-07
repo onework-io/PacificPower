@@ -11,20 +11,17 @@ watch(()=>props.projectId,id=>pm.load(id),{immediate:true})
 const detail=ref<{mode:string;target:string}|null>(null)
 function openDetail(mode:string,target:string){ detail.value={mode,target} }
 const viewer=useViewerStore(), tab=ref('home'), basis=ref('WD'), query=ref('')
-const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&JSON.stringify(t).toLowerCase().includes(query.value.toLowerCase())))
+const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&(workStatus.value==='全部'||(pm.state.work[t.code]?.status??'未開始')===workStatus.value)&&JSON.stringify(t).toLowerCase().includes(query.value.toLowerCase())))
+const workStatus=ref('全部')
 const docs=computed(()=>plan.documents.filter(d=>JSON.stringify(d).toLowerCase().includes(query.value.toLowerCase())))
 const maxDay=computed(()=>basis.value==='P'?35:80)
 const tabs=[['home','角色工作台'],['issues','議題協調'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
 const selectedCode = ref<string | null>(null)
 const selectedTask = computed(() => plan.tasks.find(t => t.code === selectedCode.value))
-function relatedCodes(id: string): string[] {
-  return ['site','shell'].includes(id) ? ['2.1.1','2.1.2']
-    : ['power','power-routes'].includes(id) ? ['2.2.1','2.2.2','2.3.1']
-    : ['2.3.1','2.3.2']
-}
-function related(id: string) { return relatedCodes(id).join('、') }
-function taskParts(code: string) { return PARTS.filter(p => relatedCodes(p.id).includes(code)) }
+function related(id:string){return plan.tasks.filter(t=>pm.taskParts(t.code).includes(id)).map(t=>t.code).join('、')||'未關聯'}
+function taskParts(code:string){return PARTS.filter(p=>pm.taskParts(code).includes(p.id))}
 const selectedParts = computed(() => selectedCode.value ? taskParts(selectedCode.value) : [])
+watch(selectedParts,parts=>{if(selectedCode.value){viewer.isolatedId=null;viewer.highlightedIds=new Set(parts.map(p=>p.id))}})
 function clearSelection() {
   selectedCode.value = null
   viewer.showAll()
@@ -55,7 +52,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 <div class="plan-content" :inert="!!detail"><header><small>工作範圍依據 · {{plan.source.revision}} · {{plan.source.date}}</small><h2>資料中心前期策略與技術方向評估</h2><button @click="download">下載工作清冊 JSON</button></header>
 <p class="notice">容量待確認：來源文件為 <b>50 MW</b>；3D 保留使用者指定的 <b>250 MW 園區總容量</b>。模型供需求評估參照，不代表已核定設計或已完成施工。</p>
 <nav><button v-for="item in tabs" :key="item[0]" :class="{active:tab===item[0]}" @click="tab=item[0]!">{{item[1]}}</button></nav>
-<div class="tools"><template v-if="tab==='wbs'||tab==='gantt'"><button :class="{active:basis==='P'}" @click="basis='P'">委任前 P1–35</button><button :class="{active:basis==='WD'}" @click="basis='WD'">正式評估 WD1–80</button></template><input v-if="['wbs','gantt','documents'].includes(tab)" v-model="query" aria-label="搜尋工作或文件" placeholder="搜尋 WBS、文件、主責…" /></div>
+<div class="tools"><select v-if="['wbs','gantt'].includes(tab)" v-model="workStatus" aria-label="工項狀態篩選"><option v-for="s in ['全部','未開始','執行中','待審查','已接受','退回修訂']" :key="s">{{s}}</option></select><template v-if="tab==='wbs'||tab==='gantt'"><button :class="{active:basis==='P'}" @click="basis='P'">委任前 P1–35</button><button :class="{active:basis==='WD'}" @click="basis='WD'">正式評估 WD1–80</button></template><input v-if="['wbs','gantt','documents'].includes(tab)" v-model="query" aria-label="搜尋工作或文件" placeholder="搜尋 WBS、文件、主責…" /></div>
 <div v-if="selectedTask && (tab==='wbs'||tab==='gantt')" class="selection" aria-live="polite">
   <b>{{selectedTask.code}} · {{selectedTask.name}}</b>
   <template v-if="selectedParts.length"><small>已標示 {{selectedParts.length}} 組相關元件；點選下方元件可單獨定位。此為評估參照，不表示施工完成。</small><div class="part-links"><button v-for="p in selectedParts" :key="p.id" @click="focus(p.id)">{{p.name}}</button></div></template>
@@ -80,5 +77,5 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 
 .selection{padding:10px 20px;background:#43c7ff12;border-bottom:1px solid var(--line);max-height:190px;overflow:auto;flex-shrink:0}.part-links{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}.part-links button{font-size:11px;padding:4px 7px}.task-link{text-align:left;padding:0;border:0;font-weight:500;line-height:1.6}.selected{background:#43c7ff20}tbody tr:hover{background:#43c7ff0d}button:focus-visible{outline:2px solid #7edaff;outline-offset:3px}
 
-.assessment{height:100%;display:flex;flex-direction:column;background:var(--panel-solid);color:var(--text);font-size:12px;min-width:0;min-height:0}header{padding:12px 20px}h2{font-size:18px;margin:5px 0 10px}small{display:block;color:var(--muted);font-size:11px;margin-top:5px}button,input{border:1px solid var(--line);border-radius:5px;padding:7px 10px;background:transparent;color:inherit}button{cursor:pointer}button:hover,.active{background:#43c7ff20;border-color:#43c7ff;color:#7edaff}.notice{margin:0;padding:10px 20px;background:#d99b1618;color:#eac887;line-height:1.7}nav,.tools{display:flex;gap:8px;padding:10px 20px;flex-wrap:wrap;border-bottom:1px solid var(--line)}input{margin-left:auto;min-width:180px}.body{overflow:auto;padding:0 20px 20px;flex:1;min-height:0}p,li{line-height:1.8}table{border-collapse:collapse;width:100%;min-width:640px}th,td{text-align:left;padding:10px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:11px;white-space:nowrap}td:first-child{min-width:64px}td b{display:block;font-weight:500}.track{width:260px;height:25px;position:relative;background-image:linear-gradient(to right,#ffffff20 1px,transparent 1px)}.track button{padding:0;border:0;position:absolute;top:5px;height:15px;background:#4eb8d9;border-radius:2px;min-width:3px}.track .milestone{background:#edab61}.track .buffer{background:#788797}footer{color:var(--muted);padding-top:24px;line-height:1.7}h3{margin-top:24px}
+.assessment{height:100%;display:flex;flex-direction:column;background:var(--panel-solid);color:var(--text);font-size:12px;min-width:0;min-height:0}header{padding:12px 20px}h2{font-size:18px;margin:5px 0 10px}small{display:block;color:var(--muted);font-size:11px;margin-top:5px}button,input,select{border:1px solid var(--line);border-radius:5px;padding:7px 10px;background:transparent;color:inherit}button{cursor:pointer}button:hover,.active{background:#43c7ff20;border-color:#43c7ff;color:#7edaff}.notice{margin:0;padding:10px 20px;background:#d99b1618;color:#eac887;line-height:1.7}nav,.tools{display:flex;gap:8px;padding:10px 20px;flex-wrap:wrap;border-bottom:1px solid var(--line)}input{margin-left:auto;min-width:180px}.body{overflow:auto;padding:0 20px 20px;flex:1;min-height:0}p,li{line-height:1.8}table{border-collapse:collapse;width:100%;min-width:640px}th,td{text-align:left;padding:10px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:11px;white-space:nowrap}td:first-child{min-width:64px}td b{display:block;font-weight:500}.track{width:260px;height:25px;position:relative;background-image:linear-gradient(to right,#ffffff20 1px,transparent 1px)}.track button{padding:0;border:0;position:absolute;top:5px;height:15px;background:#4eb8d9;border-radius:2px;min-width:3px}.track .milestone{background:#edab61}.track .buffer{background:#788797}footer{color:var(--muted);padding-top:24px;line-height:1.7}h3{margin-top:24px}
 </style>
