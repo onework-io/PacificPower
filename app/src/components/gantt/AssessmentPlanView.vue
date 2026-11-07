@@ -11,7 +11,8 @@ import { usePmisStore } from '@/stores/pmis'
 import plan from '@/data/assessmentPlan.json'
 import { PARTS } from '@/data/parts'
 import { useViewerStore } from '@/stores/viewer'
-const props=defineProps<{projectId:string}>()
+const props=defineProps<{projectId:string;initialView?:string}>()
+const presentationMode = import.meta.env.DEV && new URLSearchParams(location.search).get('presentation') === '1'
 const pm=usePmisStore()
 watch(()=>props.projectId,id=>pm.load(id),{immediate:true})
 const detail=ref<{mode:string;target:string}|null>(null)
@@ -23,6 +24,12 @@ const workStatus=ref('全部')
 const docs=computed(()=>plan.documents.filter(d=>JSON.stringify(d).toLowerCase().includes(query.value.toLowerCase())))
 const maxDay=computed(()=>basis.value==='P'?35:80)
 const tabs=[['home','角色工作台'],['curves','S 曲線／燃盡圖'],['delivery','交付與驗收總覽'],['issues','議題協調'],['meetings','會議與決策'],['inspections','查驗與缺失'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['pdm','PDM 關係圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
+watch(() => props.initialView, view => {
+  if (view && tabs.some(([key]) => key === view)) {
+    detail.value = null
+    tab.value = view
+  }
+}, { immediate: true })
 const selectedCode = ref<string | null>(null)
 const selectedTask = computed(() => plan.tasks.find(t => t.code === selectedCode.value))
 function related(id:string){return plan.tasks.filter(t=>pm.taskParts(t.code).includes(id)).map(t=>t.code).join('、')||'未關聯'}
@@ -58,7 +65,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 <template>
 <section class="assessment">
 <div class="plan-content" :inert="!!detail"><header><small>工作範圍依據 · {{plan.source.revision}} · {{plan.source.date}}</small><h2>資料中心前期策略與技術方向評估</h2><button @click="download">下載工作清冊 JSON</button></header>
-<p v-if="projectId===DEMO_PROJECT_ID" class="notice"><b>MOCK DATA｜示範專案</b> · 模擬基準日 2026-11-07；非真實工程進度。<button @click="resetDemo">重置示範資料（保留前次副本）</button></p>
+<p v-if="projectId===DEMO_PROJECT_ID && !presentationMode" class="notice"><b>MOCK DATA｜示範專案</b> · 模擬基準日 2026-11-07；非真實工程進度。<button @click="resetDemo">重置示範資料（保留前次副本）</button></p>
 <p class="notice">園區總容量調整為 <b>50 MW</b>，與評估文件容量一致。既有 3D 佈局供需求評估參照，設備配置與 IT 容量待核定，不代表已核定設計或已完成施工。</p>
 <nav><button v-for="item in tabs" :key="item[0]" :class="{active:tab===item[0]}" @click="tab=item[0]!">{{item[1]}}</button></nav>
 <nav v-if="['gantt','pdm','curves'].includes(tab)" aria-label="時程視圖切換"><button @click="tab='gantt'">甘特圖 · 工作日安排</button><button @click="tab='pdm'">PDM · 前置關係</button><button @click="tab='curves'">S 曲線／燃盡圖 · 進度追蹤</button></nav><div class="tools"><select v-if="['wbs','gantt'].includes(tab)" v-model="workStatus" aria-label="工項狀態篩選"><option v-for="s in ['全部','未開始','執行中','待審查','已接受','退回修訂']" :key="s">{{s}}</option></select><template v-if="tab==='wbs'||tab==='gantt'"><button :class="{active:basis==='P'}" @click="basis='P'">委任前 P1–35</button><button :class="{active:basis==='WD'}" @click="basis='WD'">正式評估 WD1–80</button></template><input v-if="['wbs','gantt','documents'].includes(tab)" v-model="query" aria-label="搜尋工作或文件" placeholder="搜尋 WBS、文件、主責…" /></div>
