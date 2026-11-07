@@ -18,3 +18,13 @@ describe('projectRepository JSON', () => {
     expect(projects[0].code).toBe(PROJECTS[0].code)
   })
 })
+
+it('migrates former capacity labels while preserving IDs and user edits',()=>{
+ const old={...PROJECTS[0],code:'PP-DC250-CONCEPT',name:'250 MW 資料中心建設',model:'250 MW 園區 · 200 MW IT（假設）',description:'自訂描述'}
+ const migrated=parseProjectData(JSON.stringify([old]))[0]!
+ expect(migrated.id).toBe(old.id)
+ expect(migrated.name).toBe('50 MW 資料中心建設')
+ expect(migrated.model).toBe('50 MW 園區總容量 · IT 容量待核定')
+ expect(migrated.code).toBe('PP-DC50-CONCEPT')
+ expect(migrated.description).toBe('自訂描述')
+})

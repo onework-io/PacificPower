@@ -265,7 +265,7 @@ function createProject() {
   editingDraft.value = {
     id: crypto.randomUUID(),
     code: `AMP-${now.getFullYear()}-NEW`,
-    name: '', description: '', client: '', location: '', model: '250 MW 資料中心',
+    name: '', description: '', client: '', location: '', model: '50 MW 資料中心',
     modelSource: 'pacificpower-template', modelTemplateId: PACIFICPOWER_DATACENTER_TEMPLATE_ID,
     crew: '', status: '規劃中', progress: 0, scheduleDelta: 0, budget: 0, spent: 0,
     startDate: now.toISOString().slice(0, 10).replaceAll('-', '/'),
@@ -563,7 +563,7 @@ watch(() => props.projects, (projects) => {
             <label :class="{ active: editingDraft.modelSource === 'pacificpower-template' }">
               <input v-model="editingDraft.modelSource" type="radio" value="pacificpower-template" />
               <i class="model-source-options__icon">A</i>
-              <span><strong>PacificPower 資料中心 3D</strong><small>套用目前 250 MW 園區、17 個施工分組與 WBS 對應</small></span>
+              <span><strong>PacificPower 資料中心 3D</strong><small>50 MW 園區目標；沿用 17 個模型分組與 WBS 對應，設備配置待核定</small></span>
               <b>建議</b>
             </label>
             <label :class="{ active: editingDraft.modelSource === 'project-model' }">

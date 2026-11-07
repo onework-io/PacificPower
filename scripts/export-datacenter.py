@@ -23,7 +23,7 @@ for obj in list(source.objects):
   if bucket not in instances:
    for child in obj.instance_collection.objects:add(child,child.matrix_world,bucket)
   instances.setdefault(bucket,[]).append([obj.location.x,obj.location.z,-obj.location.y])
-  manifest.append({'assetId':obj.name,'partId':bucket,'positionBlenderM':list(obj.location),'planningITkW':100})
+  manifest.append({'assetId':obj.name,'partId':bucket,'positionBlenderM':list(obj.location),'planningITkW':None})
  elif obj.type in {'MESH','CURVE'}:
   col=obj.users_collection[0].name
   bucket={'01_SITE':'site','03_POWER':'power','04_COOLING':'cooling','05_NETWORK':'network','07_PIPES_FWS':'fws','08_PIPES_TCS':'tcs','09_POWER_ROUTES':'power-routes','10_FIBER_ROUTES':'fiber'}.get(col)

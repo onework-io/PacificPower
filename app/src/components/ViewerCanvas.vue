@@ -51,10 +51,10 @@ function onPointerUp(e: PointerEvent) {
       <p v-if="poi.editMode" class="overlay hint">點模型表面新增標記 · 拖曳仍可轉動視角</p>
 
       <aside class="campus-summary" aria-label="園區容量與模型來源">
-        <strong>250 MW <small>園區總用電容量</small></strong>
-        <span>8 個機房區 · 2,000 機櫃位置 · 200 MW IT 規劃值</span>
-        <span>250 MW 概念模型｜評估文件為 50 MW，容量差異待確認</span>
-        <nav><a href="downloads/Campus_250MW.blend" download>園區 Blender（細節版）</a><a href="downloads/Rack_CDU_Detailed.blend" download>機櫃／CDU 細節</a><a href="models/assets.json" download>設備位置表</a></nav>
+        <strong>50 MW <small>園區總用電容量</small></strong>
+        <span>既有示意佈局：8 個機房區 · 2,000 機櫃位置</span>
+        <span>50 MW 園區目標｜IT 容量與設備配置待核定</span>
+        <nav><a href="downloads/Campus_250MW.blend" download>既有 Blender（容量待重配）</a><a href="downloads/Rack_CDU_Detailed.blend" download>機櫃／CDU 細節</a><a href="models/assets.json" download>設備位置表</a></nav>
       </aside>
       <StepSubtitle />
       <PoiCard :screen="activePoiScreen" />

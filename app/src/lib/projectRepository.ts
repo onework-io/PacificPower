@@ -131,7 +131,14 @@ export function parseProjectData(json: string): ProjectSummary[] {
   const parsed = JSON.parse(json) as ProjectDataFile | ProjectSummary[]
   const projects = Array.isArray(parsed) ? parsed : parsed.projects
   if (!Array.isArray(projects)) throw new Error('Invalid project JSON')
-  return mergeWithDefaults(projects)
+  return mergeWithDefaults(projects).map(project=>{
+    // Preserve project identity and all PMIS/model bindings; migrate only former default labels.
+    if(project.id!==DEFAULT_PROJECT_DATA.projects[0]?.id)return project
+    const legacy={"code": "PP-DC250-CONCEPT", "name": "250 MW 資料中心建設", "description": "工作內容依 PISG Rev1.3-H4 前期評估草案；來源 50 MW 與既有 250 MW 園區模型容量差異待確認。T0、基地及授權人員待確認。", "model": "250 MW 園區 · 200 MW IT（假設）"}
+    const updated={...project}
+    for(const key of ['code','name','description','model'] as const){if(updated[key]===legacy[key])updated[key]=DEFAULT_PROJECT_DATA.projects[0]![key]}
+    return updated
+  })
 }
 
 /**

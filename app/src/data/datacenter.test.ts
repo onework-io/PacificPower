@@ -37,10 +37,10 @@ describe('data center model and construction schedule', () => {
     }
   })
   it('retains 2000 unique rack IDs mapped to eight rendered hall groups', () => {
-    const assets = JSON.parse(readFileSync(resolve('public/models/assets.json'), 'utf8')) as Array<{assetId:string;partId:string;planningITkW:number}>
+    const assets = JSON.parse(readFileSync(resolve('public/models/assets.json'), 'utf8')) as Array<{assetId:string;partId:string;planningITkW:number|null}>
     expect(assets).toHaveLength(2000)
     expect(new Set(assets.map(a => a.assetId)).size).toBe(2000)
-    expect(assets.reduce((sum,a)=>sum+a.planningITkW,0)).toBe(200000)
+    expect(assets.every(a=>a.planningITkW===null)).toBe(true)
     for (let i=1;i<=8;i++) {
       const id = `dc${String(i).padStart(2,'0')}-racks`
       expect(PARTS.some(p=>p.id===id)).toBe(true)
