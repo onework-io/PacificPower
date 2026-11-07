@@ -113,7 +113,7 @@ async function reloadPublishedWbs() {
 <template>
   <div class="panel">
     <div class="source-switch"><button @click="referenceMode = !referenceMode">{{ referenceMode ? '查看舊施工假設沙盒（非文件範圍）' : '返回 PISG 文件工作範圍' }}</button><span v-if="!referenceMode">舊版未核定假設，不屬 Rev1.3-H4；不得作為正式工期或進度。</span></div>
-    <AssessmentPlanView v-if="referenceMode" />
+    <AssessmentPlanView v-if="referenceMode" :project-id="projectId" />
     <template v-else>
     <nav class="panel__tabs">
       <button
