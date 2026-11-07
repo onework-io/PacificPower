@@ -1,12 +1,12 @@
 """Compose CUA operation captures, Traditional Chinese captions and original music.
-Usage: python3 scripts/build-demo-video.py /tmp/pisg-recording/frames.json
+Usage: python3 scripts/build-demo-video.py frames.json [output-directory]
 Requires Pillow, numpy, ffmpeg. Captures are actual UI states, edited as a walkthrough.
 """
 import json,sys,wave,subprocess
 from pathlib import Path
 import numpy as np
 from PIL import Image,ImageDraw,ImageFont
-frames=json.load(open(sys.argv[1])); out=Path('output/demo-video');out.mkdir(parents=True,exist_ok=True)
+frames=json.load(open(sys.argv[1])); out=Path(sys.argv[2] if len(sys.argv)>2 else 'output/demo-video');out.mkdir(parents=True,exist_ok=True)
 font='/System/Library/Fonts/Supplemental/Arial Unicode.ttf'
 head=ImageFont.truetype(font,32); sub=ImageFont.truetype(font,30); small=ImageFont.truetype(font,20)
 concat=[]; subtitles=[]; elapsed=0
@@ -15,8 +15,13 @@ def stamp(s):
  ms=round(s*1000);return f'{ms//3600000:02}:{ms//60000%60:02}:{ms//1000%60:02},{ms%1000:03}'
 for i,f in enumerate(frames):
  im=Image.new('RGB',(1600,1060),'#10171c');d=ImageDraw.Draw(im)
- d.rectangle((0,0,7,1060),fill='#ff681b');d.text((35,15),'PISG  /  '+f['chapter'],font=head,fill='white');d.text((1280,25),'50 MW · MOCK',font=small,fill='#ff9b59')
- shot=Image.open(f['path']).convert('RGB').resize((1600,900),Image.Resampling.LANCZOS);im.paste(shot,(0,70))
+ d.rectangle((0,0,7,1060),fill='#ff681b');d.text((35,15),'PISG  /  '+f['chapter'],font=head,fill='white');d.text((1250,25),'50 MW · DIGITAL TWIN',font=small,fill='#ff9b59')
+ shot=Image.open(f['path']).convert('RGB')
+ # Optional presentation-only title strip; original application data is unchanged.
+ if f.get('cover'):
+  sd=ImageDraw.Draw(shot);box=f['cover'];sd.rectangle(box,fill='#232d32')
+  sd.text((box[0]+18,box[1]+16),'PISG | 專案協同管理',font=ImageFont.truetype(font,18),fill='#ff9b59')
+ shot=shot.resize((1600,900),Image.Resampling.LANCZOS);im.paste(shot,(0,70))
  caption=f['caption']; width=d.textlength(caption,font=sub)
  d.text(((1600-width)/2,990),caption,font=sub,fill='white')
  path=out/f'caption-{i:03}.png';im.save(path)
