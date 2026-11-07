@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { DEMO_PROJECT_ID, installMockDemo } from '@/data/mockDemo'
 import { computed, ref, watch } from 'vue'
 import PdmView from './PdmView.vue'
 import ProgressCurvesView from './ProgressCurvesView.vue'
@@ -14,6 +15,7 @@ const props=defineProps<{projectId:string}>()
 const pm=usePmisStore()
 watch(()=>props.projectId,id=>pm.load(id),{immediate:true})
 const detail=ref<{mode:string;target:string}|null>(null)
+function resetDemo(){try{installMockDemo(location.origin,true);pm.load(props.projectId)}catch{alert('示範資料儲存失敗，請先匯出備份。')}}
 function openDetail(mode:string,target:string){ detail.value={mode,target} }
 const viewer=useViewerStore(), tab=ref('home'), basis=ref('WD'), query=ref('')
 const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&(workStatus.value==='全部'||(pm.state.work[t.code]?.status??'未開始')===workStatus.value)&&JSON.stringify(t).toLowerCase().includes(query.value.toLowerCase())))
@@ -56,6 +58,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 <template>
 <section class="assessment">
 <div class="plan-content" :inert="!!detail"><header><small>工作範圍依據 · {{plan.source.revision}} · {{plan.source.date}}</small><h2>資料中心前期策略與技術方向評估</h2><button @click="download">下載工作清冊 JSON</button></header>
+<p v-if="projectId===DEMO_PROJECT_ID" class="notice"><b>MOCK DATA｜示範專案</b> · 模擬基準日 2026-11-07；非真實工程進度。<button @click="resetDemo">重置示範資料（保留前次副本）</button></p>
 <p class="notice">園區總容量調整為 <b>50 MW</b>，與評估文件容量一致。既有 3D 佈局供需求評估參照，設備配置與 IT 容量待核定，不代表已核定設計或已完成施工。</p>
 <nav><button v-for="item in tabs" :key="item[0]" :class="{active:tab===item[0]}" @click="tab=item[0]!">{{item[1]}}</button></nav>
 <nav v-if="['gantt','pdm','curves'].includes(tab)" aria-label="時程視圖切換"><button @click="tab='gantt'">甘特圖 · 工作日安排</button><button @click="tab='pdm'">PDM · 前置關係</button><button @click="tab='curves'">S 曲線／燃盡圖 · 進度追蹤</button></nav><div class="tools"><select v-if="['wbs','gantt'].includes(tab)" v-model="workStatus" aria-label="工項狀態篩選"><option v-for="s in ['全部','未開始','執行中','待審查','已接受','退回修訂']" :key="s">{{s}}</option></select><template v-if="tab==='wbs'||tab==='gantt'"><button :class="{active:basis==='P'}" @click="basis='P'">委任前 P1–35</button><button :class="{active:basis==='WD'}" @click="basis='WD'">正式評估 WD1–80</button></template><input v-if="['wbs','gantt','documents'].includes(tab)" v-model="query" aria-label="搜尋工作或文件" placeholder="搜尋 WBS、文件、主責…" /></div>

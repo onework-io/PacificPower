@@ -12,6 +12,7 @@ import AccountManagement from '@/components/AccountManagement.vue'
 import { useViewerStore } from '@/stores/viewer'
 import { usePoiStore } from '@/stores/poi'
 import { useCostStore } from '@/stores/cost'
+import { DEMO_PROJECT_ID, installMockDemo } from '@/data/mockDemo'
 import type { ProjectSummary } from '@/data/projects'
 import { projectRepository } from '@/lib/projectRepository'
 import { authConfigured, supabase } from '@/lib/supabase'
@@ -94,6 +95,7 @@ function openProjectById(projectId: string) {
   if (project) openProject(project)
 }
 
+function openDemo(){installMockDemo(location.origin);openProject({...projects.value[0]!,id:DEMO_PROJECT_ID,code:'PISG-DEMO-50MW',name:'50 MW 資料中心｜示範專案',description:'MOCK DATA：2026-11-07 模擬資料，非真實工程進度',model:'50 MW 示範場景',progress:40})}
 function openProject(project: ProjectSummary) {
   if (!can('project.view')) return
   scheduleTarget.value = undefined
@@ -275,6 +277,7 @@ async function activateSession(session: Session | null) {
 onMounted(async () => {
   if (!authConfigured || !supabase) {
     authReady.value = true
+    if(!projectRepository.apiEnabled&&new URLSearchParams(location.search).get('demo')==='1'){openDemo();return}
     await loadRemoteProjects()
     return
   }
@@ -354,6 +357,7 @@ function applyPreset(ratio: number) {
     <section><div class="access-pending__mark">A</div><p>ACCOUNT APPROVAL</p><h1>帳號等待核准</h1><span>{{ profileMessage }}</span><small>{{ authSession.user.email }}</small><button @click="signOut">登出</button></section>
   </main>
   <template v-else>
+    <button v-if="page==='portfolio'&&!projectRepository.apiEnabled&&!authConfigured" class="demo-launch" @click="openDemo">開啟 Mock 示範專案</button>
     <ProjectPortfolio
       v-if="page === 'portfolio'"
       :projects="projects"
@@ -454,6 +458,7 @@ function applyPreset(ratio: number) {
 </template>
 
 <style scoped>
+.demo-launch{position:fixed;right:24px;bottom:24px;z-index:50;background:#ff681b;color:#182026;font-weight:700;padding:12px 18px;box-shadow:0 5px 20px #0006}
 .auth-loading { min-height: 100%; display: grid; place-items: center; color: var(--muted); background: var(--bg); }
 .access-pending{min-height:100%;display:grid;place-items:center;padding:30px;background:radial-gradient(circle at 20% 10%,#164061 0,transparent 36%),#08111f}.access-pending section{width:min(460px,100%);display:grid;justify-items:center;padding:38px;border:1px solid #2b4161;border-radius:18px;background:#101c2eee;box-shadow:0 28px 80px #0008;text-align:center}.access-pending__mark{width:48px;height:48px;display:grid;place-items:center;border-radius:13px;color:#07121f;background:var(--accent);font-size:24px;font-weight:900}.access-pending p{margin:20px 0 5px;color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.15em}.access-pending h1{margin:0 0 10px}.access-pending span{color:#a4b5c9;line-height:1.7}.access-pending small{margin:14px 0 20px;color:#758aa4}.access-pending button{min-width:120px;border-color:#3b5575;color:#b7c8da}
 .app {
