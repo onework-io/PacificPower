@@ -1,0 +1,15 @@
+{
+  "revision": "video-detail-v2",
+  "addedObjectsByCollection": {
+    "ASSET_RACK_100kW_assumed": 63,
+    "09_POWER_ROUTES": 960,
+    "04_COOLING": 2544,
+    "07_PIPES_FWS": 1280,
+    "08_PIPES_TCS": 480,
+    "03_POWER": 2008
+  },
+  "rackInstances": 2000,
+  "capacityMW": 250,
+  "sourceVideo": "AQNi05GQ4VRAB7ZvF6_1JKFzI1tXS9pvNPhopICIjZIuUh3IsSpST6h1CT11Q9FGPkoAEDdQU28yk9h3inN53N6P3oyGPyxrMXccNryPscqfmg.mp4",
+  "designStatus": "concept visual detail, not construction approved"
+}

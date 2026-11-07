@@ -47,6 +47,78 @@ export const PARTS: PartDef[] = [
     "installStepId": "dc-shell"
   },
   {
+    "id": "dc03-racks",
+    "file": "dc03-racks.glb",
+    "bytes": 70288,
+    "name": "DC03 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-03"
+  },
+  {
+    "id": "dc04-racks",
+    "file": "dc04-racks.glb",
+    "bytes": 70288,
+    "name": "DC04 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-04"
+  },
+  {
+    "id": "dc02-racks",
+    "file": "dc02-racks.glb",
+    "bytes": 70288,
+    "name": "DC02 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-02"
+  },
+  {
+    "id": "dc07-racks",
+    "file": "dc07-racks.glb",
+    "bytes": 70288,
+    "name": "DC07 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-07"
+  },
+  {
+    "id": "dc08-racks",
+    "file": "dc08-racks.glb",
+    "bytes": 70288,
+    "name": "DC08 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-08"
+  },
+  {
+    "id": "dc06-racks",
+    "file": "dc06-racks.glb",
+    "bytes": 70288,
+    "name": "DC06 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-06"
+  },
+  {
+    "id": "dc01-racks",
+    "file": "dc01-racks.glb",
+    "bytes": 70292,
+    "name": "DC01 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-01"
+  },
+  {
+    "id": "dc05-racks",
+    "file": "dc05-racks.glb",
+    "bytes": 70292,
+    "name": "DC05 機櫃區 · 250 座",
+    "group": "機櫃分區",
+    "kind": "equipment",
+    "installStepId": "dc-racks-05"
+  },
+  {
     "id": "site",
     "file": "site.glb",
     "bytes": 108436,
@@ -65,18 +137,9 @@ export const PARTS: PartDef[] = [
     "installStepId": "dc-fiber"
   },
   {
-    "id": "fws",
-    "file": "fws.glb",
-    "bytes": 325868,
-    "name": "FWS 設施側供回水管",
-    "group": "冷卻系統",
-    "kind": "equipment",
-    "installStepId": "dc-fws"
-  },
-  {
     "id": "tcs",
     "file": "tcs.glb",
-    "bytes": 347672,
+    "bytes": 1303876,
     "name": "TCS 機櫃側供回液管",
     "group": "冷卻系統",
     "kind": "equipment",
@@ -85,16 +148,25 @@ export const PARTS: PartDef[] = [
   {
     "id": "power-routes",
     "file": "power-routes.glb",
-    "bytes": 353772,
+    "bytes": 1515436,
     "name": "A/B 配電路徑與母線",
     "group": "供配電",
     "kind": "equipment",
     "installStepId": "dc-power-routes"
   },
   {
+    "id": "fws",
+    "file": "fws.glb",
+    "bytes": 2770992,
+    "name": "FWS 設施側供回水管",
+    "group": "冷卻系統",
+    "kind": "equipment",
+    "installStepId": "dc-fws"
+  },
+  {
     "id": "power",
     "file": "power.glb",
-    "bytes": 567372,
+    "bytes": 2863520,
     "name": "變壓器／備援發電／UPS 設備群",
     "group": "供配電",
     "kind": "equipment",
@@ -103,86 +175,14 @@ export const PARTS: PartDef[] = [
   {
     "id": "cooling",
     "file": "cooling.glb",
-    "bytes": 719660,
+    "bytes": 3199028,
     "name": "室外冷卻機組與 CDU",
     "group": "冷卻系統",
     "kind": "equipment",
     "installStepId": "dc-cooling"
-  },
-  {
-    "id": "dc03-racks",
-    "file": "dc03-racks.glb",
-    "bytes": 1425844,
-    "name": "DC03 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-03"
-  },
-  {
-    "id": "dc04-racks",
-    "file": "dc04-racks.glb",
-    "bytes": 1425844,
-    "name": "DC04 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-04"
-  },
-  {
-    "id": "dc02-racks",
-    "file": "dc02-racks.glb",
-    "bytes": 1425848,
-    "name": "DC02 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-02"
-  },
-  {
-    "id": "dc07-racks",
-    "file": "dc07-racks.glb",
-    "bytes": 1425852,
-    "name": "DC07 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-07"
-  },
-  {
-    "id": "dc08-racks",
-    "file": "dc08-racks.glb",
-    "bytes": 1425852,
-    "name": "DC08 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-08"
-  },
-  {
-    "id": "dc01-racks",
-    "file": "dc01-racks.glb",
-    "bytes": 1425856,
-    "name": "DC01 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-01"
-  },
-  {
-    "id": "dc06-racks",
-    "file": "dc06-racks.glb",
-    "bytes": 1425856,
-    "name": "DC06 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-06"
-  },
-  {
-    "id": "dc05-racks",
-    "file": "dc05-racks.glb",
-    "bytes": 1425864,
-    "name": "DC05 機櫃區 · 250 座",
-    "group": "機櫃分區",
-    "kind": "equipment",
-    "installStepId": "dc-racks-05"
   }
 ]
 export const GROUP_ORDER = ['基地土建', '供配電', '冷卻系統', '機櫃分區', '通訊系統']
 export const TOTAL_BYTES = PARTS.reduce((s, p) => s + p.bytes, 0)
 export const SHELL_PART_ID = 'shell'
-export function modelUrl(file: string): string { return `models/${encodeURIComponent(file)}` }
+export function modelUrl(file: string): string { return `models/${encodeURIComponent(file)}?v=detail-v2` }
