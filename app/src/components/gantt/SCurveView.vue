@@ -22,9 +22,9 @@ const mode = ref<'progress' | 'cost'>('progress')
 
 <style scoped>
 .analysis { display: flex; flex-direction: column; height: 100%; min-height: 0; }
-nav { display: flex; align-items: center; gap: 5px; padding: 6px 14px; border-bottom: 1px solid var(--line); background: #08111e; }
+nav { display: flex; align-items: center; gap: 5px; padding: 6px 14px; border-bottom: 1px solid var(--line); background: #1b2022; }
 nav button { padding: 4px 10px; border: 1px solid var(--line); border-radius: 5px; color: var(--muted); }
-nav button.active { border-color: #4cc2ff88; color: var(--accent); background: #4cc2ff14; }
+nav button.active { border-color: #ffad7a88; color: var(--accent); background: #ffad7a14; }
 nav span { margin-left: 6px; color: var(--muted); font-size: 10px; }
 .body { flex: 1; min-height: 0; }
 </style>

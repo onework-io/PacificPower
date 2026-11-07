@@ -212,14 +212,14 @@ async function reloadPublishedWbs() {
 .template {
   margin: 0 4px 6px 8px;
   padding: 4px 9px;
-  border: 1px solid #4cc2ff66;
+  border: 1px solid #ffad7a66;
   border-radius: 5px;
   color: var(--accent);
   white-space: nowrap;
   text-decoration: none;
 }
 .import:hover,
-.template:hover { background: #4cc2ff16; }
+.template:hover { background: #ffad7a16; }
 .import:disabled { opacity: 0.55; cursor: wait; }
 
 .import-status {

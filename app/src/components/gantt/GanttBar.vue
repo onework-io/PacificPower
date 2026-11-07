@@ -82,7 +82,7 @@ function end() {
   top: 5px;
   height: 18px;
   border-radius: 4px;
-  background: #3b82f6;
+  background: #ff681b;
   cursor: grab;
   touch-action: none;
   display: flex;
@@ -93,7 +93,7 @@ function end() {
 .bar.is-dragging { cursor: grabbing; }
 .bar.is-readonly { cursor: pointer; }
 .bar.is-critical { background: #e11d48; }
-.bar.has-no-model { background: #64748b; }
+.bar.has-no-model { background: #738793; }
 .bar.is-selected { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 .bar__fill {

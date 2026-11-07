@@ -403,7 +403,7 @@ function cursorUp() {
 .spacer { flex: 1; }
 .field { display: flex; align-items: center; gap: 6px; color: var(--muted); white-space: nowrap; }
 .field input[type='date'] {
-  background: #0b1322;
+  background: #1e2326;
   border: 1px solid var(--line);
   border-radius: 5px;
   color: var(--text);
@@ -431,7 +431,7 @@ function cursorUp() {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: #101a2b;
+  background: #242a2e;
   border-bottom: 1px solid var(--line);
   height: 34px;
 }
@@ -489,7 +489,7 @@ function cursorUp() {
   cursor: pointer;
 }
 .task:hover { background: #ffffff0a; }
-.task.is-selected { background: #4cc2ff1f; }
+.task.is-selected { background: #ffad7a1f; }
 .task.is-jump-highlight { animation: jump-task 700ms ease-in-out 3; }
 .task.has-no-model .task__name { color: var(--muted); }
 
@@ -502,7 +502,7 @@ function cursorUp() {
 .task__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .task__dur, .task__prog {
   width: 100%;
-  background: #0b1322;
+  background: #1e2326;
   border: 1px solid var(--line);
   border-radius: 4px;
   color: var(--text);
@@ -518,15 +518,15 @@ function cursorUp() {
   border-bottom: 1px solid #ffffff08;
   display: flex;
 }
-.track.is-selected { background: #4cc2ff0a; }
+.track.is-selected { background: #ffad7a0a; }
 .track.is-jump-highlight { animation: jump-track 700ms ease-in-out 3; }
 @keyframes jump-task {
-  0%, 100% { background: #4cc2ff1f; box-shadow: inset 3px 0 0 var(--accent); }
-  50% { background: #4cc2ff55; box-shadow: inset 5px 0 0 #b7e9ff; }
+  0%, 100% { background: #ffad7a1f; box-shadow: inset 3px 0 0 var(--accent); }
+  50% { background: #ffad7a55; box-shadow: inset 5px 0 0 #ffad7a; }
 }
 @keyframes jump-track {
-  0%, 100% { background: #4cc2ff0a; }
-  50% { background: #4cc2ff24; }
+  0%, 100% { background: #ffad7a0a; }
+  50% { background: #ffad7a24; }
 }
 .track__cell { width: var(--dayw); flex: none; border-left: 1px solid #ffffff0a; }
 .track__cell.is-weekend { background: #ffffff06; }
@@ -562,7 +562,7 @@ function cursorUp() {
 .speed {
   font: inherit;
   color: var(--text);
-  background: #0b1322;
+  background: #1e2326;
   border: 1px solid var(--line);
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;

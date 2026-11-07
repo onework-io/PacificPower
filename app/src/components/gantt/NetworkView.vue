@@ -258,7 +258,7 @@ function blockClickAfterPan(event: MouseEvent) {
 }
 .key { width: 16px; height: 2px; display: inline-block; }
 .key--critical { background: #e11d48; }
-.key--normal { background: #5b6b86; margin-left: 10px; }
+.key--normal { background: #6c808c; margin-left: 10px; }
 .net__gap { flex: 1; }
 .net__note { font-variant-numeric: tabular-nums; }
 
@@ -278,7 +278,7 @@ function blockClickAfterPan(event: MouseEvent) {
   max-height: 210px;
   padding: 10px 14px 12px;
   border-top: 1px solid var(--line);
-  background: #101a2b;
+  background: #242a2e;
   overflow: auto;
 }
 .calculation__summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -296,12 +296,12 @@ function blockClickAfterPan(event: MouseEvent) {
 .formula { display: grid; grid-template-columns: repeat(2, minmax(240px, 1fr)); gap: 3px 18px; margin-top: 4px; color: var(--muted); font-size: 10px; }
 .formula b { color: var(--accent); }
 
-.edges path { fill: none; stroke: #5b6b86; stroke-width: 1.4; }
+.edges path { fill: none; stroke: #6c808c; stroke-width: 1.4; }
 .edges path.is-critical { stroke: #e11d48; stroke-width: 2; }
 .lag { fill: var(--muted); font-size: 9px; }
 
 .node { cursor: pointer; }
-.node rect { fill: #16243a; stroke: #33455f; stroke-width: 1.2; }
+.node rect { fill: #2d353a; stroke: #49575f; stroke-width: 1.2; }
 .node:hover rect { stroke: var(--accent); }
 .node.is-critical rect { stroke: #e11d48; fill: #26192a; }
 .node.is-selected rect { stroke: var(--accent); stroke-width: 2.2; }

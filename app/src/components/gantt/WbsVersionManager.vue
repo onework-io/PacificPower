@@ -164,23 +164,23 @@ onMounted(() => { void load() })
 </template>
 
 <style scoped>
-.versions { height: 100%; overflow: auto; padding: 18px; background: #0a1220; color: var(--text); }
+.versions { height: 100%; overflow: auto; padding: 18px; background: #1c2225; color: var(--text); }
 header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
 h3 { margin: 0 0 4px; font-size: 16px; }
 p { margin: 0; }
 header p, footer, .empty { color: var(--muted); font-size: 12px; }
-button, input { border: 1px solid var(--line); border-radius: 6px; background: #111c2d; color: var(--text); }
+button, input { border: 1px solid var(--line); border-radius: 6px; background: #252c30; color: var(--text); }
 button { padding: 6px 10px; cursor: pointer; }
-button:hover:not(:disabled) { border-color: #4cc2ff88; }
+button:hover:not(:disabled) { border-color: #ffad7a88; }
 button:disabled { opacity: .5; cursor: wait; }
-button.primary { border-color: #4cc2ff88; background: #1477a8; }
+button.primary { border-color: #ffad7a88; background: #5c6d77; }
 button.danger { color: #ff9a9a; }
 .new-version { display: flex; gap: 8px; margin-bottom: 12px; }
 .new-version input { width: min(360px, 55vw); padding: 7px 10px; }
 .error { margin: 8px 0; padding: 8px 10px; border: 1px solid #ef444455; border-radius: 6px; color: #ff9a9a; background: #ef444412; font-size: 12px; }
 .empty { padding: 28px 0; text-align: center; }
 .history { display: grid; gap: 7px; }
-article { display: grid; grid-template-columns: 115px minmax(180px, 1fr) auto; align-items: center; gap: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 7px; background: #0f1928; }
+article { display: grid; grid-template-columns: 115px minmax(180px, 1fr) auto; align-items: center; gap: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 7px; background: #22282c; }
 article.is-published { border-color: #22c55e66; }
 .version-id { display: flex; align-items: center; gap: 8px; }
 .version-id strong { font-variant-numeric: tabular-nums; }

@@ -416,6 +416,7 @@ function applyPreset(ratio: number) {
         <template #right><SchedulePanel :project-id="activeProject.id" :project="activeProject" :project-start="activeProject.startDate" :initial-tab="scheduleTarget" /></template>
       </SplitPane>
 
+      <div class="workspace-brand"><img src="/branding/pisg-logo.png" alt="PISG — Power International Synergy Group" /><span>DATA CENTER · DIGITAL TWIN</span></div>
       <div class="layoutbar" aria-label="版面配置">
         <button class="layoutbar__project" title="返回專案總覽" @click="backToPortfolio">專案總覽</button>
         <span class="layoutbar__sep" />
@@ -497,10 +498,14 @@ function applyPreset(ratio: number) {
 .sidebar__foot button { flex: 1; }
 .sidebar__foot button:disabled { opacity: 0.4; cursor: default; border-color: var(--line); color: var(--text); }
 
+.workspace-brand { position:absolute;top:14px;left:16px;z-index:9;display:flex;align-items:center;gap:14px;padding:6px 10px;background:#232d32;border-left:3px solid #ff681b;border-radius:5px;max-width:calc(100% - 32px);pointer-events:none; }
+.workspace-brand img { width:134px;height:auto;display:block; }
+.workspace-brand span { color:#c2cbd0;font-size:9px;letter-spacing:.12em; }
+@media(max-width:1000px){.workspace-brand span{display:none}}
 .layoutbar {
   position: absolute;
   z-index: 8;
-  top: 16px;
+  top: 78px;
   left: 16px;
   display: flex;
   align-items: center;
@@ -513,7 +518,7 @@ function applyPreset(ratio: number) {
   box-shadow: 0 5px 18px #0005;
   transition: top 160ms ease;
 }
-.workspace.is-compact-3d .layoutbar { top: 68px; }
+.workspace.is-compact-3d .layoutbar { top: 78px; }
 .layoutbar button { border: 0; padding: 4px 9px; white-space: nowrap; }
 .layoutbar button:hover { background: #ffffff12; }
 .layoutbar button.is-on { background: var(--accent); color: #06121d; font-weight: 600; }

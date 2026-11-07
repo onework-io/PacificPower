@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.assistant { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #111b2c; }
+.assistant { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #252b2f; }
 .assistant__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px 10px; border-bottom: 1px solid var(--line); }
 .assistant__head h2 { margin: 0; font-size: 16px; }
 .assistant__head p { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
@@ -292,12 +292,12 @@ onBeforeUnmount(() => {
 .mode i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .mode.is-live { border-color: #22c55e66; color: #74d5a3; }
 .quick { display: flex; gap: 6px; padding: 10px 18px 4px; overflow-x: auto; }
-.quick button { border-color: #4cc2ff44; color: var(--accent); white-space: nowrap; }
+.quick button { border-color: #ffad7a44; color: var(--accent); white-space: nowrap; }
 .messages { flex: 1; min-height: 120px; overflow-y: auto; padding: 12px 18px; }
-.message { width: min(86%, 620px); margin: 0 0 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #18253a; }
-.message.is-user { margin-left: auto; background: #12304a; border-color: #4cc2ff55; }
+.message { width: min(86%, 620px); margin: 0 0 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #2e363b; }
+.message.is-user { margin-left: auto; background: #323b41; border-color: #ffad7a55; }
 .message strong { display: block; margin-bottom: 3px; color: var(--accent); font-size: 11px; }
-.message.is-user strong { color: #9ddcff; }
+.message.is-user strong { color: #ffad7a; }
 .message p { margin: 0; white-space: pre-line; }
 .message__files { margin-bottom: 5px; color: var(--muted); font-size: 11px; }
 .message__progress { display: flex; flex-wrap: wrap; gap: 6px; margin: 5px 0 8px; }
@@ -305,17 +305,17 @@ onBeforeUnmount(() => {
 .message__progress b { display: inline; margin-left: 3px; color: var(--text); font-size: 12px; font-variant-numeric: tabular-nums; }
 .message__progress .is-ai { border-color: #f59e0b55; color: #f6c768; }
 .message__progress .is-ai b { color: #f6c768; }
-.message .focus { margin-top: 8px; border-color: #4cc2ff66; color: var(--accent); }
+.message .focus { margin-top: 8px; border-color: #ffad7a66; color: var(--accent); }
 .is-thinking { opacity: 0.72; animation: pulse 1.2s ease-in-out infinite alternate; }
 @keyframes pulse { to { opacity: 0.42; } }
 .photos { display: flex; gap: 8px; padding: 8px 18px 0; overflow-x: auto; }
 .photos figure { position: relative; flex: 0 0 94px; margin: 0; }
 .photos img { display: block; width: 94px; height: 66px; object-fit: cover; border: 1px solid var(--line); border-radius: 7px; }
 .photos figcaption { overflow: hidden; margin-top: 2px; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
-.photos button { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; padding: 0; border-radius: 50%; background: #26344d; }
+.photos button { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; padding: 0; border-radius: 50%; background: #3c474e; }
 .assistant__error { margin: 6px 18px 0; color: #ff9a9a; font-size: 11px; }
 .composer { display: grid; grid-template-columns: auto minmax(100px, 1fr) auto; gap: 8px; align-items: end; padding: 12px 18px 6px; border-top: 1px solid var(--line); }
-.composer textarea { width: 100%; min-height: 54px; resize: vertical; border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; color: var(--text); background: #0d1727; font: inherit; }
+.composer textarea { width: 100%; min-height: 54px; resize: vertical; border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; color: var(--text); background: #21272a; font: inherit; }
 .composer textarea:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
 .upload { height: 34px; white-space: nowrap; }
 .send { height: 34px; border-color: var(--accent); color: var(--accent); }

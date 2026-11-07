@@ -65,11 +65,11 @@ function onPointerUp(e: PointerEvent) {
 </template>
 
 <style scoped>
-.campus-summary { position:absolute; left:16px; top:68px; display:grid; gap:6px; max-width:calc(100% - 32px); padding:12px 16px; border:1px solid #39546b; border-radius:10px; background:#101d2bde; color:#b5cddd; font-size:11px; pointer-events:auto; }
-.campus-summary strong { font-size:22px; color:#63d9fa; }
+.campus-summary { position:absolute; left:16px; top:132px; display:grid; gap:6px; max-width:calc(100% - 32px); padding:12px 16px; border:1px solid #51616a; border-radius:10px; background:#242a2ede; color:#b5cddd; font-size:11px; pointer-events:auto; }
+.campus-summary strong { font-size:22px; color:#ffad7a; }
 .campus-summary small { font-size:11px; font-weight:400; }
 .campus-summary nav { display:flex; flex-wrap:wrap; gap:14px; }
-.campus-summary a { color:#88e3ff; }
+.campus-summary a { color:#ffad7a; }
 @media(max-width:700px) { .campus-summary { top:104px; font-size:10px; } }
 
 .stage.is-placing .stage__canvas { cursor: crosshair; }

@@ -79,23 +79,23 @@ h2, h3, p { margin: 0; }
 h2 { font-size: 16px; }
 header p, .footnote { margin-top: 4px; color: var(--muted); font-size: 10px; }
 header button { white-space: nowrap; }
-.factors { display: grid; grid-template-columns: 150px repeat(3, minmax(150px, 1fr)); align-items: center; gap: 8px; padding: 10px; border: 1px solid #4cc2ff55; border-radius: 8px; background: #4cc2ff0b; }
+.factors { display: grid; grid-template-columns: 150px repeat(3, minmax(150px, 1fr)); align-items: center; gap: 8px; padding: 10px; border: 1px solid #ffad7a55; border-radius: 8px; background: #ffad7a0b; }
 .factors h3 { color: var(--accent); font-size: 12px; }
 .factors label { display: grid; grid-template-columns: auto 68px; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; }
 .factors input { width: 68px; }
 .factors small { grid-column: 2; color: var(--accent); font-size: 9px; }
 .catalogs { display: grid; grid-template-columns: repeat(2, minmax(330px, 1fr)); gap: 10px; margin-top: 10px; }
-.catalog { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #0a1321; }
+.catalog { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #1d2225; }
 .catalog.material { grid-column: 1 / -1; }
 .catalog h3 { padding: 9px 10px; color: var(--accent); font-size: 12px; border-bottom: 1px solid var(--line); }
 .table-head, .table-row { display: grid; grid-template-columns: minmax(160px, 1fr) 64px 118px; align-items: center; gap: 7px; padding: 5px 9px; }
 .material .table-head, .material .table-row { grid-template-columns: minmax(220px, 1fr) 70px 140px; }
 .table-head { color: var(--muted); font-size: 9px; background: #ffffff08; }
 .table-row { border-top: 1px solid #ffffff09; }
-.table-row input { width: 100%; min-width: 0; padding: 4px 6px; border: 1px solid var(--line); border-radius: 4px; background: #0d1929; color: var(--text); }
+.table-row input { width: 100%; min-width: 0; padding: 4px 6px; border: 1px solid var(--line); border-radius: 4px; background: #21282b; color: var(--text); }
 .table-row input:focus { border-color: var(--accent); outline: none; }
 .table-row label { display: flex; align-items: center; gap: 4px; color: var(--muted); }
-.table-row label input { text-align: right; color: #75d7ff; font-variant-numeric: tabular-nums; }
+.table-row label input { text-align: right; color: #ffad7a; font-variant-numeric: tabular-nums; }
 .footnote { padding: 10px 2px 2px; }
 @media (max-width: 1050px) {
   .factors { grid-template-columns: 1fr; }

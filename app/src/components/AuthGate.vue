@@ -93,8 +93,8 @@ async function resetPassword() {
 <template>
   <main class="auth-gate">
     <section class="auth-card">
-      <div class="auth-brand"><span>A</span></div>
-      <p class="auth-eyebrow">PACIFICPOWER PROJECT CONTROL</p>
+      <img class="pisg-brand-logo" src="/branding/pisg-logo.png" alt="PISG" />
+      <p class="auth-eyebrow">PISG PROJECT CONTROL</p>
       <h1>{{ mode === 'login' ? '工程數位管理平台' : '申請 PacificPower 帳號' }}</h1>
       <p class="auth-lead">{{ mode === 'login'
         ? '登入後依帳號角色存取專案、WBS、3D 模型與現場進度。'
@@ -127,32 +127,32 @@ async function resetPassword() {
 </template>
 
 <style scoped>
-.auth-gate { min-height: 100%; display: grid; place-items: center; padding: 32px; background: radial-gradient(circle at 15% 10%, #164061 0, transparent 36%), linear-gradient(145deg, #08111f, #111d31); }
-.auth-card { width: min(430px, 100%); padding: 38px; border: 1px solid #2b4161; border-radius: 18px; background: #101c2ee8; box-shadow: 0 28px 80px #0008; }
-.auth-brand { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 13px; color: #07121f; background: var(--accent); font-size: 24px; font-weight: 900; }
+.auth-gate { min-height: 100%; display: grid; place-items: center; padding: 32px; background: radial-gradient(circle at 15% 10%, #3e4950 0, transparent 36%), linear-gradient(145deg, #1b2023, #272e32); }
+.auth-card { width: min(430px, 100%); padding: 38px; border: 1px solid #47545c; border-radius: 18px; background: #252c30e8; box-shadow: 0 28px 80px #0008; }
+.auth-brand { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 13px; color: #1b2022; background: var(--accent); font-size: 24px; font-weight: 900; }
 .auth-eyebrow { margin: 22px 0 5px; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .14em; }
 h1 { margin: 0; font-size: 27px; }
 .auth-lead { margin: 8px 0 28px; color: var(--muted); }
-.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 20px; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: #091321; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 20px; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: #1c2225; }
 .auth-tabs button { border: 0; color: var(--muted); }
-.auth-tabs button.active { color: #06121d; background: var(--accent); font-weight: 700; }
+.auth-tabs button.active { color: #191e21; background: var(--accent); font-weight: 700; }
 form, label { display: grid; gap: 8px; }
 form { gap: 17px; }
 label { color: #aebed2; font-size: 12px; font-weight: 600; }
 label small { color: #fda4af; font-size: 10px; font-weight: 500; }
-input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; color: var(--text); background: #091321; outline: none; font: inherit; }
-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #4cc2ff1c; }
-.auth-submit { min-height: 43px; border-color: var(--accent); color: #06121d; background: var(--accent); font-weight: 700; }
+input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; color: var(--text); background: #1c2225; outline: none; font: inherit; }
+input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #ffad7a1c; }
+.auth-submit { min-height: 43px; border-color: var(--accent); color: #191e21; background: var(--accent); font-weight: 700; }
 .auth-submit:disabled, .auth-reset:disabled { opacity: .55; cursor: default; }
 .auth-reset { justify-self: center; border: 0; color: var(--muted); }
 .auth-error, .auth-info { margin: -5px 0; padding: 9px 11px; border-radius: 7px; font-size: 12px; }
 .auth-error { color: #fecdd3; background: #9f123944; }
 .auth-info { color: #a7f3d0; background: #065f4644; }
 .strength { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: -9px; }
-.strength i { height: 3px; border-radius: 99px; background: #304158; }
+.strength i { height: 3px; border-radius: 99px; background: #45525a; }
 .strength[data-score="1"] i:nth-child(-n+1), .strength[data-score="2"] i:nth-child(-n+2) { background: #f59e0b; }
 .strength[data-score="3"] i:nth-child(-n+3), .strength[data-score="4"] i:nth-child(-n+4) { background: #34d399; }
-.strength span { grid-column: 1 / -1; color: #778aa3; font-size: 9px; }
-.approval-note { display: grid; gap: 3px; padding: 10px 12px; border: 1px solid #27445f; border-radius: 8px; color: #9edbfa; background: #102a3e; font-size: 10px; }
-.approval-note span { color: #8fa4bc; }
+.strength span { grid-column: 1 / -1; color: #8b9ca6; font-size: 9px; }
+.approval-note { display: grid; gap: 3px; padding: 10px 12px; border: 1px solid #445159; border-radius: 8px; color: #ffad7a; background: #2c3439; font-size: 10px; }
+.approval-note span { color: #a7b4bb; }
 </style>

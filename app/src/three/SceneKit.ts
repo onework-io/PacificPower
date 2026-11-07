@@ -43,7 +43,7 @@ export class SceneKit {
     const w = Math.max(host.clientWidth, 1)
     const h = Math.max(host.clientHeight, 1)
 
-    this.scene.background = new THREE.Color(0x0e1626)
+    this.scene.background = new THREE.Color(0x232d32)
     this.scene.add(this.root)
 
     this.camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 5000)

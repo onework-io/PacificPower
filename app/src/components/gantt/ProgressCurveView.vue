@@ -284,7 +284,7 @@ function onMove(e: PointerEvent) {
   position: absolute;
   top: 10px;
   transform: translateX(-50%);
-  background: #0b1322f2;
+  background: #1e2326f2;
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 6px 9px;

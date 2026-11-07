@@ -139,7 +139,7 @@ function onMove(event: PointerEvent) {
 .crosshair { stroke: #ffffff40; }
 .axis text { fill: var(--muted); font-size: 10px; text-anchor: end; }
 .axis .tx { text-anchor: middle; }
-.tip { position: absolute; top: 10px; transform: translateX(-50%); display: grid; gap: 2px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: #0b1322f2; font-size: 11px; pointer-events: none; white-space: nowrap; }
+.tip { position: absolute; top: 10px; transform: translateX(-50%); display: grid; gap: 2px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: #1e2326f2; font-size: 11px; pointer-events: none; white-space: nowrap; }
 .tip b { color: var(--muted); }
 .note { margin: 0; padding: 8px 14px 10px; color: var(--muted); font-size: 11px; border-top: 1px solid var(--line); }
 </style>

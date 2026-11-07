@@ -57,7 +57,7 @@ const finished = computed(
   max-width: min(92%, 620px);
   padding: 8px 16px 10px;
   border-radius: 10px;
-  background: #0b1322d9;
+  background: #1e2326d9;
   backdrop-filter: blur(8px);
   border: 1px solid var(--line);
   text-align: center;

@@ -1,11 +1,11 @@
 :root {
-  --bg: #0e1626;
-  --panel: #16203399;
-  --panel-solid: #162033;
-  --line: #26344d;
-  --text: #dbe4f0;
-  --muted: #8ea0bb;
-  --accent: #4cc2ff;
+  --bg: #232d32;
+  --panel: #29343bef;
+  --panel-solid: #29343b;
+  --line: #43525b;
+  --text: #f2f4f5;
+  --muted: #b0bcc3;
+  --accent: #ff681b;
   --danger: #f43f5e;
   color-scheme: dark;
 }
@@ -114,3 +114,5 @@ button:hover { border-color: var(--accent); color: var(--accent); }
   border-color: var(--accent);
 }
 .poi-marker.is-active::before { background: #06121d; }
+
+.pisg-brand-logo{width:126px;height:auto;display:block;border-radius:3px}

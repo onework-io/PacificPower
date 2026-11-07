@@ -130,7 +130,7 @@ function select(id: string) {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: #101a2b;
+  background: #242a2e;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
   font-size: 10px;
@@ -140,7 +140,7 @@ function select(id: string) {
 .row:hover { background: #ffffff0a; }
 .row--group { background: #ffffff0a; font-weight: 600; }
 .row--group:hover { background: #ffffff14; }
-.row.is-selected { background: #4cc2ff1f; }
+.row.is-selected { background: #ffad7a1f; }
 .row.is-critical .c-wbs { color: var(--danger); }
 .row.has-no-model .c-name { color: var(--muted); }
 
@@ -158,7 +158,7 @@ function select(id: string) {
 .span { color: var(--muted); }
 
 .edit {
-  background: #0b1322;
+  background: #1e2326;
   border: 1px solid var(--line);
   border-radius: 4px;
   color: var(--text);

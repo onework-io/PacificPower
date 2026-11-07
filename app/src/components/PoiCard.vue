@@ -227,7 +227,7 @@ const style = computed(() => {
 .poicard__range input {
   font: inherit;
   color: var(--text);
-  background: #0b1322;
+  background: #1e2326;
   border: 1px solid var(--line);
   border-radius: 5px;
   padding: 5px 7px;
