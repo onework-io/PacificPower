@@ -37,6 +37,21 @@ export const usePmisStore=defineStore('pmis',()=>{
  function saveWork(code:string,data:Work){identity();if(['待審查','已接受'].includes(state.value.work[code]?.status??''))throw new Error('待審查或已接受的工作需先退回修訂，才能變更設定。');state.value.work[code]={...data,status:state.value.work[code]?.status??'未開始'};log(code,'更新工作分工與完成條件')}
  function transition(code:string,next:WorkStatus,note:string){identity();const w=state.value.work[code]??defaultWork();checkReview(w.status,next,note);if(next==='待審查'&&(!w.owner.trim()||!w.reviewer.trim()||!w.criteria.trim()||!w.evidence.trim()))throw new Error('送審前請填妥主責、審查人、完成條件及成果證據。');state.value.work[code]={...w,status:next};log(code,`工作 → ${next}`,note)}
  function createIssue(data:Omit<Issue,'id'|'status'|'response'>){identity();if(!data.title.trim()||!data.owner.trim()||!data.description.trim())throw new Error('請填寫議題標題、責任窗口與說明。');const id=`ISS-${crypto.randomUUID().slice(0,8)}`;state.value.issues.unshift({...data,id,status:'待處理',response:''});log(id,'建立議題',data.title);return id}
+ function updateIssueAssignment(id:string,data:Pick<Issue,'owner'|'due'|'priority'>,reason:string){
+  identity()
+  const issue=state.value.issues.find(x=>x.id===id)
+  if(!issue)throw new Error('找不到議題')
+  if(issue.status==='已結案')throw new Error('已結案議題請先重新處理，再調整責任或期限')
+  if(!data.owner.trim()||!reason.trim())throw new Error('請填寫具名責任窗口及變更原因')
+  if(!['一般','高','緊急'].includes(data.priority))throw new Error('優先級不正確')
+  if(data.due&&(!/^\d{4}-\d{2}-\d{2}$/.test(data.due)||Number.isNaN(Date.parse(data.due))||new Date(data.due).toISOString().slice(0,10)!==data.due))throw new Error('期限日期不正確')
+  const before={owner:issue.owner,due:issue.due,priority:issue.priority}
+  const after={owner:data.owner.trim(),due:data.due,priority:data.priority}
+  if(JSON.stringify(before)===JSON.stringify(after))throw new Error('尚未變更責任窗口、期限或優先級')
+  Object.assign(issue,after)
+  const describe=(v:typeof before)=>`責任窗口 ${v.owner}／回覆期限 ${v.due||'未設定'}／優先級 ${v.priority}`
+  log(id,'議題責任與期限調整',`${reason.trim()}\n變更前：${describe(before)}\n變更後：${describe(after)}`)
+ }
  function moveIssue(id:string,next:Issue['status'],response:string){identity();const issue=state.value.issues.find(x=>x.id===id);if(!issue)throw new Error('找不到議題');const allowed:Record<Issue['status'],Issue['status'][]>={'待處理':['處理中'],'處理中':['待確認'],'待確認':['已結案','處理中'],'已結案':['處理中']};if(!allowed[issue.status].includes(next))throw new Error('議題狀態轉換不允許');if(!response.trim())throw new Error('請填寫處理或確認說明');issue.status=next;issue.response=response;log(id,`議題 → ${next}`,response)}
  function addRevision(data:Pick<Revision,'code'|'version'|'title'|'url'>){const author=identity();if(!data.version.trim()||!data.title.trim()||!safeReference(data.url))throw new Error('請填寫版本、修訂說明及有效的 HTTPS／HTTP 文件連結。');if(state.value.revisions.some(r=>r.code===data.code&&r.version===data.version.trim()))throw new Error('此文件版本已存在，請使用新的版本號');const r:Revision={...data,version:data.version.trim(),id:crypto.randomUUID(),author,status:'執行中',note:'',createdAt:new Date().toISOString()};state.value.revisions.unshift(r);log(data.code,`登錄文件 ${r.version}`,r.title)}
  function reviewRevision(id:string,next:WorkStatus,note:string){identity();const r=state.value.revisions.find(x=>x.id===id);if(!r)throw new Error('找不到文件版本');checkReview(r.status,next,note);r.status=next;r.note=note;log(r.code,`${r.version} → ${next}`,note)}
@@ -54,7 +69,7 @@ export const usePmisStore=defineStore('pmis',()=>{
  function resetBinding(code:string,reason:string){identity();if(!reason.trim())throw new Error('請填寫恢復原因');delete state.value.bindings[code];log(code,'恢復預設 3D 評估關聯',reason)}
  function mergeBackup(backup:State){identity();const next=mergePmis(state.value,backup);next.audit.unshift({id:crypto.randomUUID(),at:new Date().toISOString(),actor:identity(),target:'project',action:'合併還原備份',note:'只新增未存在紀錄，未覆寫現有資料'});state.value=next}
  const pending=computed(()=>state.value.issues.filter(i=>i.status!=='已結案'))
- return {saveInspection,submitInspection,reviewInspection,inspectionDefect,saveMeeting,confirmMeeting,reopenMeeting,addMeetingAction,taskParts,setBinding,resetBinding,mergeBackup,state,role,actor,error,project,pending,load,saveWork,transition,createIssue,moveIssue,addRevision,reviewRevision,comment}
+ return {updateIssueAssignment,saveInspection,submitInspection,reviewInspection,inspectionDefect,saveMeeting,confirmMeeting,reopenMeeting,addMeetingAction,taskParts,setBinding,resetBinding,mergeBackup,state,role,actor,error,project,pending,load,saveWork,transition,createIssue,moveIssue,addRevision,reviewRevision,comment}
 })
 
 // Validate imported backups before preview or mutation. Only known fields survive.
