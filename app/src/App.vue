@@ -95,7 +95,7 @@ function openProjectById(projectId: string) {
   if (project) openProject(project)
 }
 
-function openDemo(){installMockDemo(location.origin);openProject({...projects.value[0]!,id:DEMO_PROJECT_ID,code:'PISG-DEMO-50MW',name:'50 MW 資料中心｜示範專案',description:'MOCK DATA：2026-11-07 模擬資料，非真實工程進度',model:'50 MW 示範場景',progress:40})}
+function openDemo(){installMockDemo(new URL(import.meta.env.BASE_URL, document.baseURI).href);openProject({...projects.value[0]!,id:DEMO_PROJECT_ID,code:'PISG-DEMO-50MW',name:'50 MW 資料中心｜示範專案',description:'MOCK DATA：2026-11-07 模擬資料，非真實工程進度',model:'50 MW 示範場景',progress:40})}
 function openProject(project: ProjectSummary) {
   if (!can('project.view')) return
   scheduleTarget.value = undefined
@@ -277,7 +277,7 @@ async function activateSession(session: Session | null) {
 onMounted(async () => {
   if (!authConfigured || !supabase) {
     authReady.value = true
-    if(!projectRepository.apiEnabled&&new URLSearchParams(location.search).get('demo')==='1'){openDemo();return}
+    if(!projectRepository.apiEnabled&&(new URLSearchParams(location.search).get('demo')==='1'||import.meta.env.VITE_PUBLIC_DEMO==='true')){openDemo();return}
     await loadRemoteProjects()
     return
   }

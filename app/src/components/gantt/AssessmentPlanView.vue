@@ -16,7 +16,7 @@ const presentationMode = import.meta.env.DEV && new URLSearchParams(location.sea
 const pm=usePmisStore()
 watch(()=>props.projectId,id=>pm.load(id),{immediate:true})
 const detail=ref<{mode:string;target:string}|null>(null)
-function resetDemo(){try{installMockDemo(location.origin,true);pm.load(props.projectId)}catch{alert('示範資料儲存失敗，請先匯出備份。')}}
+function resetDemo(){try{installMockDemo(new URL(import.meta.env.BASE_URL, document.baseURI).href,true);pm.load(props.projectId)}catch{alert('示範資料儲存失敗，請先匯出備份。')}}
 function openDetail(mode:string,target:string){ detail.value={mode,target} }
 const viewer=useViewerStore(), tab=ref('home'), basis=ref('WD'), query=ref('')
 const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&(workStatus.value==='全部'||(pm.state.work[t.code]?.status??'未開始')===workStatus.value)&&JSON.stringify(t).toLowerCase().includes(query.value.toLowerCase())))

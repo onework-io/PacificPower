@@ -186,3 +186,10 @@ PDM 情境預覽顯示延後工作、原日期及試算日期，連回工作詳�
 操作導覽輸出於 `output/demo-video/`（大型產物不納入 Git）。影片為實際 UI 擷取後剪輯的逐步導覽，含燒錄繁體中文字幕與原創 112 BPM 電子配樂，非連續螢幕錄影。`scripts/build-demo-video.py` 可從 CUA 擷取的 frames.json 重製 MP4、SRT 與 WAV；需 Pillow、NumPy、FFmpeg。
 
 影片第二版加長 3D 操作介紹（全幅、縮放旋轉、系統圖層、設備隔離、FWS／TCS／CDU、機櫃、爆炸圖及 WBS 關聯），輸出至 `output/demo-video-v2/`。影片不呈現 Mock 標示；應用程式的示範資料標識與原始資料保持不變。
+
+## Public website
+
+https://onework-io.github.io/PacificPower/
+
+GitHub Pages deploys `app/dist` automatically after tests and build pass on `main`.
+The public site opens the 50 MW demonstration project; edits are stored in each visitor’s browser, not synchronized between users. No backend credentials are included in the Pages build.

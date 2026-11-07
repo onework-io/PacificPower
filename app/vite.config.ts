@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
-  // 相對路徑，讓同一份 build 在 GitHub Pages 的子路徑（/Ampower/）與根路徑都能跑
+  // 相對路徑，讓同一份 build 在 GitHub Pages 的子路徑（/PacificPower/）與根路徑都能跑
   base: './',
   plugins: [vue()],
   resolve: {

@@ -3,6 +3,7 @@ import type { State, WorkStatus } from '@/stores/pmis'
 import type { PdmLink } from '@/lib/pdmScenario'
 export const DEMO_PROJECT_ID='pisg-50mw-demo-v1'
 export function makeMockDemo(origin='http://127.0.0.1:5173'):State {
+ origin=origin.replace(/\/$/,'')
  const state:State={schema:1,work:{},issues:[],revisions:[],meetings:[],inspections:[],bindings:{},audit:[],comments:[]}
  const now='2026-11-07T09:00:00+08:00'
  plan.tasks.forEach((t,i)=>{
