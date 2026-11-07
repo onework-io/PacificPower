@@ -1,0 +1,1092 @@
+{
+  "source": {
+    "title": "PISG 資料中心評估工作計畫 HPE工作範圍討論版",
+    "revision": "Rev1.3-H4",
+    "date": "2026-10-12",
+    "uuid": "a5f588bb-dcd7-4da3-aca8-19a4be1b79cd",
+    "capacityMW": 50,
+    "status": "草案／供討論"
+  },
+  "tasks": [
+    {
+      "code": "0.1.1",
+      "basis": "P",
+      "start": 1,
+      "end": 3,
+      "name": "PISG與太電確認決策、議約及簽認窗口",
+      "owner": "PISG商務窗口／太電有權人",
+      "documents": [
+        "COMM-01"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.2",
+      "basis": "P",
+      "start": 4,
+      "end": 8,
+      "name": "PISG與太電談訂執行模式、Scope及商務基準",
+      "owner": "PISG商務窗口／太電授權決策人及PMO",
+      "documents": [
+        "COMM-01"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.5",
+      "basis": "P",
+      "start": 9,
+      "end": 10,
+      "name": "C0 詢價基準書面確認",
+      "owner": "太電有權人核定／PISG取得書面",
+      "documents": [
+        "COMM-01"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.6",
+      "basis": "P",
+      "start": 11,
+      "end": 18,
+      "name": "HPE逐項回覆Scope、執行方法、人力、時程與報價",
+      "owner": "PISG採購窗口／HPE提案人",
+      "documents": [
+        "COMM-02"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.7",
+      "basis": "P",
+      "start": 19,
+      "end": 23,
+      "name": "C1 主約與分包差異核定：核對back-to-back條款",
+      "owner": "PISG／太電與HPE有權商務及法務",
+      "documents": [
+        "COMM-03"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.8",
+      "basis": "P",
+      "start": 24,
+      "end": 26,
+      "name": "太電→PISG主約核價、批准及簽署",
+      "owner": "太電與PISG授權人",
+      "documents": [
+        "COMM-04"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.9",
+      "basis": "P",
+      "start": 27,
+      "end": 28,
+      "name": "C2 主約與分包簽署完成",
+      "owner": "PISG與HPE授權人",
+      "documents": [
+        "COMM-05"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.4",
+      "basis": "P",
+      "start": 29,
+      "end": 29,
+      "name": "R0 階段A有限診斷啟動條件確認",
+      "owner": "太電PMO／PISG窗口／HPE診斷主責",
+      "documents": [
+        "COMM-04",
+        "COMM-05"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.1.3",
+      "basis": "P",
+      "start": 30,
+      "end": 30,
+      "name": "確認T0並正式通知階段A啟動",
+      "owner": "PISG窗口通知／太電PMO與HPE確認",
+      "documents": [
+        "COMM-04",
+        "COMM-05"
+      ],
+      "page": 3
+    },
+    {
+      "code": "0.2",
+      "basis": "P",
+      "start": 31,
+      "end": 35,
+      "name": "委任前協商緩衝；動用須更新T0",
+      "owner": "PISG窗口／太電／HPE",
+      "documents": [
+        "COMM-03"
+      ],
+      "page": 3
+    },
+    {
+      "code": "1.1.1",
+      "basis": "WD",
+      "start": 1,
+      "end": 5,
+      "name": "既有資料收受與內部訪談",
+      "owner": "HPE主顧問／太電PMO",
+      "documents": [
+        "DOC-14",
+        "DOC-15"
+      ],
+      "page": 4
+    },
+    {
+      "code": "1.1.2",
+      "basis": "WD",
+      "start": 3,
+      "end": 8,
+      "name": "編製需求、時程及分工文件",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-01",
+        "DOC-02",
+        "DOC-03"
+      ],
+      "page": 4
+    },
+    {
+      "code": "1.2.1",
+      "basis": "WD",
+      "start": 9,
+      "end": 10,
+      "name": "業主合併D0審查意見",
+      "owner": "太電PMO",
+      "documents": [
+        "DOC-16"
+      ],
+      "page": 4
+    },
+    {
+      "code": "1.2.2",
+      "basis": "WD",
+      "start": 11,
+      "end": 12,
+      "name": "HPE修訂D0並確認最低資料期限",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-01",
+        "DOC-02",
+        "DOC-03",
+        "DOC-16"
+      ],
+      "page": 4
+    },
+    {
+      "code": "1.3",
+      "basis": "WD",
+      "start": 12,
+      "end": 12,
+      "name": "G0 診斷驗收及主評估啟動決策：完整啟動／限縮／暫停（修訂完成後）",
+      "owner": "太電主約／PISG分包授權驗收人；B啟動由太電授權決策人",
+      "documents": [
+        "DOC-15"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.1.1",
+      "basis": "WD",
+      "start": 13,
+      "end": 22,
+      "name": "登錄位置、權屬、用途及建物資料",
+      "owner": "HPE場址／建築專業",
+      "documents": [
+        "DOC-05"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.1.2",
+      "basis": "WD",
+      "start": 18,
+      "end": 27,
+      "name": "辨認改建限制與後續查證需求",
+      "owner": "HPE場址／建築專業",
+      "documents": [
+        "DOC-05"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.2.1",
+      "basis": "WD",
+      "start": 13,
+      "end": 22,
+      "name": "盤點契約容量及受電證據",
+      "owner": "HPE電力專業",
+      "documents": [
+        "DOC-06"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.2.2",
+      "basis": "WD",
+      "start": 18,
+      "end": 27,
+      "name": "核對IT／全場容量及分期；查核區域供電政策與限制",
+      "owner": "HPE電力專業",
+      "documents": [
+        "DOC-06"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.3.1",
+      "basis": "WD",
+      "start": 13,
+      "end": 22,
+      "name": "建立DC／AIDC容量、密度、冷卻及備援評估假設",
+      "owner": "HPE資料中心／機電冷卻專業",
+      "documents": [
+        "DOC-07"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.3.2",
+      "basis": "WD",
+      "start": 18,
+      "end": 27,
+      "name": "比較兩類適用條件，核對場址、電力與模型一致性",
+      "owner": "HPE資料中心／機電冷卻專業",
+      "documents": [
+        "DOC-07"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.4.1",
+      "basis": "WD",
+      "start": 13,
+      "end": 22,
+      "name": "整理成本架構、來源與排除",
+      "owner": "HPE造價專業",
+      "documents": [
+        "DOC-08"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.4.2",
+      "basis": "WD",
+      "start": 23,
+      "end": 23,
+      "name": "K1 估算輸入版本確認",
+      "owner": "HPE主顧問及四領域專業",
+      "documents": [
+        "DOC-14"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.4.3",
+      "basis": "WD",
+      "start": 24,
+      "end": 27,
+      "name": "依K1核定版本編製初估區間與敏感度",
+      "owner": "HPE造價專業",
+      "documents": [
+        "DOC-08"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.4.4",
+      "basis": "WD",
+      "start": 28,
+      "end": 31,
+      "name": "接收技術完成版、回核及必要重算",
+      "owner": "HPE造價專業",
+      "documents": [
+        "DOC-08"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.5.1",
+      "basis": "WD",
+      "start": 32,
+      "end": 34,
+      "name": "編製期中報告與G1待決事項",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-04"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.5.2",
+      "basis": "WD",
+      "start": 35,
+      "end": 35,
+      "name": "D1 期中成果包送審",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-04",
+        "DOC-05",
+        "DOC-06",
+        "DOC-07",
+        "DOC-08",
+        "DOC-14",
+        "DOC-15",
+        "DOC-16"
+      ],
+      "page": 4
+    },
+    {
+      "code": "2.6.1",
+      "basis": "WD",
+      "start": 36,
+      "end": 39,
+      "name": "彙整設備／系統方向、評估假設與比較重點",
+      "owner": "太電PMO",
+      "documents": [
+        "DOC-16"
+      ],
+      "page": 5
+    },
+    {
+      "code": "2.6.2",
+      "basis": "WD",
+      "start": 40,
+      "end": 40,
+      "name": "G1 期中方向共識確認",
+      "owner": "太電授權決策人",
+      "documents": [
+        "DOC-15"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.1.1",
+      "basis": "WD",
+      "start": 41,
+      "end": 43,
+      "name": "依G1修訂D1、回覆意見與更新共同基準",
+      "owner": "HPE編修複核；太電主約／PISG分包授權驗收人接受",
+      "documents": [
+        "DOC-04",
+        "DOC-05",
+        "DOC-06",
+        "DOC-07",
+        "DOC-08",
+        "DOC-16"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.1.2",
+      "basis": "WD",
+      "start": 43,
+      "end": 43,
+      "name": "K2 期末比較情境版本確認（修訂完成後）",
+      "owner": "太電PMO／HPE主顧問",
+      "documents": [
+        "DOC-14",
+        "DOC-15"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.2.1",
+      "basis": "WD",
+      "start": 44,
+      "end": 53,
+      "name": "更新各案成本模型與敏感度",
+      "owner": "HPE造價專業",
+      "documents": [
+        "DOC-12"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.2.2",
+      "basis": "WD",
+      "start": 44,
+      "end": 53,
+      "name": "編方案風險評分表",
+      "owner": "HPE主顧問及配置專業",
+      "documents": [
+        "DOC-13"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.3.1",
+      "basis": "WD",
+      "start": 54,
+      "end": 56,
+      "name": "比較一般DC、AIDC及暫緩選項之成本與風險",
+      "owner": "HPE主顧問／造價專業",
+      "documents": [
+        "DOC-11"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.3.2",
+      "basis": "WD",
+      "start": 57,
+      "end": 57,
+      "name": "K3 方案、成本與風險一致性檢核",
+      "owner": "HPE主顧問及四領域專業",
+      "documents": [
+        "DOC-11",
+        "DOC-12",
+        "DOC-13"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.4.1",
+      "basis": "WD",
+      "start": 58,
+      "end": 61,
+      "name": "編路線圖、簡報及後續採購安排",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-09",
+        "DOC-10"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.4.2",
+      "basis": "WD",
+      "start": 62,
+      "end": 62,
+      "name": "D2 期末成果包初稿送審",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-09",
+        "DOC-10",
+        "DOC-11",
+        "DOC-12",
+        "DOC-13",
+        "DOC-14",
+        "DOC-15",
+        "DOC-16"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.5.1",
+      "basis": "WD",
+      "start": 63,
+      "end": 67,
+      "name": "太電一次合併審查",
+      "owner": "太電PMO",
+      "documents": [
+        "DOC-16"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.5.2",
+      "basis": "WD",
+      "start": 68,
+      "end": 72,
+      "name": "HPE一般修訂及逐項回覆",
+      "owner": "HPE主顧問及配置專業",
+      "documents": [
+        "DOC-09",
+        "DOC-10",
+        "DOC-11",
+        "DOC-12",
+        "DOC-13",
+        "DOC-16"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.5.3",
+      "basis": "WD",
+      "start": 73,
+      "end": 74,
+      "name": "成果定稿與內部QA",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-09",
+        "DOC-10",
+        "DOC-11",
+        "DOC-12",
+        "DOC-13",
+        "DOC-14",
+        "DOC-15",
+        "DOC-16"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.5.4",
+      "basis": "WD",
+      "start": 75,
+      "end": 75,
+      "name": "F 階段B成果驗收",
+      "owner": "太電主約／PISG分包授權驗收人；太電PMO彙整",
+      "documents": [
+        "DOC-01",
+        "DOC-02",
+        "DOC-03",
+        "DOC-04",
+        "DOC-05",
+        "DOC-06",
+        "DOC-07",
+        "DOC-08",
+        "DOC-09",
+        "DOC-10",
+        "DOC-11",
+        "DOC-12",
+        "DOC-13",
+        "DOC-14",
+        "DOC-15",
+        "DOC-16"
+      ],
+      "page": 5
+    },
+    {
+      "code": "3.6",
+      "basis": "WD",
+      "start": 76,
+      "end": 80,
+      "name": "固定計畫邊界內的獨立緩衝",
+      "owner": "太電PMO／HPE主顧問",
+      "documents": [],
+      "page": 5
+    },
+    {
+      "code": "3.7",
+      "basis": "WD",
+      "start": 76,
+      "end": 78,
+      "name": "G2 後續行動或暫緩決策（依實際驗收日順延）",
+      "owner": "太電授權決策人",
+      "documents": [
+        "DOC-15"
+      ],
+      "page": 5
+    },
+    {
+      "code": "4.1.1",
+      "basis": "WD",
+      "start": 1,
+      "end": 75,
+      "name": "文件、假設與議題管理",
+      "owner": "HPE主顧問",
+      "documents": [
+        "DOC-14"
+      ],
+      "page": 6
+    },
+    {
+      "code": "4.1.2",
+      "basis": "WD",
+      "start": 1,
+      "end": 75,
+      "name": "會議與決策紀錄",
+      "owner": "HPE主顧問／太電PMO",
+      "documents": [
+        "DOC-15"
+      ],
+      "page": 6
+    },
+    {
+      "code": "4.1.3",
+      "basis": "WD",
+      "start": 9,
+      "end": 75,
+      "name": "審查意見逐項回覆",
+      "owner": "HPE主顧問／太電PMO",
+      "documents": [
+        "DOC-16"
+      ],
+      "page": 6
+    },
+    {
+      "code": "4.2.1",
+      "basis": "WD",
+      "start": 1,
+      "end": 8,
+      "name": "建立資料需求、介面責任及資料交接",
+      "owner": "HPE主顧問／太電PMO／PISG商務負責人",
+      "documents": [
+        "DOC-03",
+        "DOC-14"
+      ],
+      "page": 6
+    },
+    {
+      "code": "4.2.2",
+      "basis": "WD",
+      "start": 1,
+      "end": 12,
+      "name": "階段A目標、資料缺口與介面釐清",
+      "owner": "HPE主顧問／太電PMO／PISG商務負責人",
+      "documents": [
+        "DOC-14",
+        "DOC-15"
+      ],
+      "page": 6
+    },
+    {
+      "code": "4.2.3",
+      "basis": "WD",
+      "start": 13,
+      "end": 74,
+      "name": "階段B跨專業參數、估算與業主介面協調",
+      "owner": "HPE各專業／太電PMO／PISG商務負責人",
+      "documents": [
+        "DOC-03",
+        "DOC-14",
+        "DOC-15"
+      ],
+      "page": 6
+    },
+    {
+      "code": "4.2.4",
+      "basis": "WD",
+      "start": 36,
+      "end": 75,
+      "name": "各批接受、變更、未結介面及交接追蹤",
+      "owner": "HPE／太電PMO／太電主約與PISG分包驗收人／PISG商務",
+      "documents": [
+        "DOC-14",
+        "DOC-16"
+      ],
+      "page": 6
+    }
+  ],
+  "documents": [
+    {
+      "code": "COMM-01",
+      "name": "服務需求與範圍確認書",
+      "scope": "目標、場址容量範圍、階段、交付、排除、審查與商務基準",
+      "owner": "PISG編製／太電有權人確認",
+      "due": "P8基準／P10書面確認",
+      "format": "待確認",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "COMM-02",
+      "name": "服務建議書與費用報價",
+      "scope": "逐項接受／修訂／排除、方法、具名人員、在地能力、資料、費用與樣本",
+      "owner": "HPE提案／PISG確認",
+      "due": "P18",
+      "format": "待確認",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "COMM-03",
+      "name": "主約與分包條款對照表",
+      "scope": "範圍、價格、時程、付款、驗收、變更與差異核定",
+      "owner": "PISG主責／三方商務法務",
+      "due": "P23",
+      "format": "待確認",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "COMM-04",
+      "name": "主約服務工作說明書",
+      "scope": "太電→PISG：階段A、價金、付款、變更、生效及階段B啟動",
+      "owner": "太電與PISG授權人",
+      "due": "P26",
+      "format": "待確認",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "COMM-05",
+      "name": "分包服務工作說明書",
+      "scope": "PISG→HPE：與主約對應，確認啟動前提",
+      "owner": "PISG與HPE授權人",
+      "due": "P28簽署；P29–30前提",
+      "format": "待確認",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-01",
+      "name": "專案需求書",
+      "scope": "目標、範圍、排除、容量、分期、可靠度假設與待決事項",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD8初稿／WD12修訂",
+      "format": "DOCX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-02",
+      "name": "顧問服務進度計畫",
+      "scope": "WBS、工期、相依、送審、修訂、緩衝與前提",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD8初稿／WD12修訂",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-03",
+      "name": "責任分工矩陣",
+      "scope": "編製、複核、審查、驗收、核款及資料介面責任",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD8初稿／WD12修訂",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-04",
+      "name": "期中報告",
+      "scope": "土地、供電、DC／AIDC與成本結論、限制與待決事項",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD35初稿／WD43修訂及接受",
+      "format": "DOCX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-05",
+      "name": "土地與建物場址資料冊",
+      "scope": "場址位置、權屬、用途、建物、來源及桌面初讀；後續查證事項",
+      "owner": "HPE場址／建築專業",
+      "due": "WD35初稿／WD43修訂及接受",
+      "format": "DOCX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-06",
+      "name": "既有電力現況基準表",
+      "scope": "契約容量、IT／全場口徑、分期、PUE及供電政策限制，記錄來源日期與缺口",
+      "owner": "HPE電力專業",
+      "due": "WD35初稿／WD43修訂及接受",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-07",
+      "name": "空間、電力與冷卻需求模型",
+      "scope": "DC／AIDC空間、機櫃、容量、熱與電力需求；不含詳細負載表、配電設計或設備選型",
+      "owner": "HPE資料中心／機電冷卻專業",
+      "due": "WD35初稿／WD43修訂及接受",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-08",
+      "name": "成本量級估算書",
+      "scope": "土地、土建、供電、機電、冷卻與費用量級區間、來源及排除",
+      "owner": "HPE造價專業",
+      "due": "WD35初稿／WD43修訂及接受",
+      "format": "DOCX＋PDF（內含估算表）",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-09",
+      "name": "資料中心路線圖報告",
+      "scope": "建議方案、預算條件、未決事項及下一步",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD62初稿／WD74定稿／WD75驗收",
+      "format": "DOCX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-10",
+      "name": "管理層決策簡報",
+      "scope": "技術、預算、風險、未知事項與決策需求",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD62初稿／WD74定稿／WD75驗收",
+      "format": "PPTX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-11",
+      "name": "未來策略比較表",
+      "scope": "一般DC／AIDC／暫緩的條件、成本、風險與建議",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD62初稿／WD74定稿／WD75驗收",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-12",
+      "name": "方案成本模型",
+      "scope": "區間、小計、敏感度、未估項目與後續費用",
+      "owner": "HPE造價專業",
+      "due": "WD62初稿／WD74定稿／WD75驗收",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-13",
+      "name": "方案風險評分表",
+      "scope": "準則、權重、評分理由、證據及風險降低措施",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD62初稿／WD74定稿／WD75驗收",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-14",
+      "name": "文件、假設與議題管理冊",
+      "scope": "來源、版本、假設、缺口、影響、責任與結案追蹤（3分頁）",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD1–75持續更新，隨D0／D1／D2交付",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-15",
+      "name": "會議與決策紀錄冊",
+      "scope": "會議、決策、條件與確認；業主確認決策（2分頁）",
+      "owner": "HPE主顧問／HPE紀錄人；太電有權人確認決策",
+      "due": "WD1–75持續更新，隨D0／D1／D2交付",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-16",
+      "name": "審查意見回覆表",
+      "scope": "意見、回覆、修訂位置、版本、接受與未結事項",
+      "owner": "HPE主顧問／配置專業",
+      "due": "WD9起隨審查循環更新",
+      "format": "XLSX＋PDF",
+      "optional": false,
+      "page": 8
+    },
+    {
+      "code": "DOC-17",
+      "name": "場址評估服務範圍草案",
+      "scope": "後續查證、現勘、使用／改建範圍、資料與成果",
+      "owner": "HPE場址／建築專業",
+      "due": "另行委任、排程及驗收",
+      "format": "DOCX＋PDF",
+      "optional": true,
+      "page": 8
+    },
+    {
+      "code": "DOC-18",
+      "name": "供電評估服務範圍草案",
+      "scope": "容量／接入查詢、新舊方案、負載與介面",
+      "owner": "HPE電力專業",
+      "due": "另行委任、排程及驗收",
+      "format": "DOCX＋PDF",
+      "optional": true,
+      "page": 8
+    },
+    {
+      "code": "DOC-19",
+      "name": "概念設計服務範圍草案",
+      "scope": "後續概念設計範圍、資料、圖說與介面",
+      "owner": "HPE資料中心／機電冷卻專業",
+      "due": "另行委任、排程及驗收",
+      "format": "DOCX＋PDF",
+      "optional": true,
+      "page": 8
+    },
+    {
+      "code": "DOC-20",
+      "name": "造價顧問服務範圍草案",
+      "scope": "後續估算、數量、詢價、費用、成果、前提與界線",
+      "owner": "HPE造價專業",
+      "due": "另行委任、排程及驗收",
+      "format": "DOCX＋PDF",
+      "optional": true,
+      "page": 8
+    }
+  ],
+  "annotatedDependencies": [
+    {
+      "source": "1.1.1",
+      "target": "4.2.1",
+      "relation": "SS"
+    },
+    {
+      "source": "1.1.1",
+      "target": "4.2.2",
+      "relation": "SS"
+    },
+    {
+      "source": "1.1.1",
+      "target": "4.1.1",
+      "relation": "SS"
+    },
+    {
+      "source": "1.1.1",
+      "target": "4.1.2",
+      "relation": "SS"
+    },
+    {
+      "source": "1.2.1",
+      "target": "4.1.3",
+      "relation": "SS"
+    },
+    {
+      "source": "2.1.1",
+      "target": "2.3.1",
+      "relation": "SS"
+    },
+    {
+      "source": "2.2.1",
+      "target": "2.3.1",
+      "relation": "SS"
+    },
+    {
+      "source": "2.1.2",
+      "target": "2.3.2",
+      "relation": "SS"
+    },
+    {
+      "source": "2.2.2",
+      "target": "2.3.2",
+      "relation": "SS"
+    },
+    {
+      "source": "1.1.2",
+      "target": "1.2.1",
+      "relation": "FS"
+    },
+    {
+      "source": "1.3",
+      "target": "2.1.1",
+      "relation": "FS"
+    },
+    {
+      "source": "1.3",
+      "target": "2.2.1",
+      "relation": "FS"
+    },
+    {
+      "source": "1.3",
+      "target": "2.3.1",
+      "relation": "FS"
+    },
+    {
+      "source": "1.3",
+      "target": "2.4.1",
+      "relation": "FS"
+    },
+    {
+      "source": "1.3",
+      "target": "4.2.3",
+      "relation": "FS"
+    },
+    {
+      "source": "2.1.1",
+      "target": "2.4.2",
+      "relation": "FS"
+    },
+    {
+      "source": "2.2.1",
+      "target": "2.4.2",
+      "relation": "FS"
+    },
+    {
+      "source": "2.3.1",
+      "target": "2.4.2",
+      "relation": "FS"
+    },
+    {
+      "source": "2.1.2",
+      "target": "2.4.4",
+      "relation": "FS"
+    },
+    {
+      "source": "2.2.2",
+      "target": "2.4.4",
+      "relation": "FS"
+    },
+    {
+      "source": "2.3.2",
+      "target": "2.4.4",
+      "relation": "FS"
+    },
+    {
+      "source": "2.4.4",
+      "target": "2.5.1",
+      "relation": "FS"
+    },
+    {
+      "source": "2.3.2",
+      "target": "2.5.1",
+      "relation": "FS"
+    },
+    {
+      "source": "2.1.2",
+      "target": "2.5.1",
+      "relation": "FS"
+    },
+    {
+      "source": "2.2.2",
+      "target": "2.5.1",
+      "relation": "FS"
+    },
+    {
+      "source": "2.5.2",
+      "target": "4.2.4",
+      "relation": "FS"
+    },
+    {
+      "source": "2.5.2",
+      "target": "2.6.1",
+      "relation": "FS"
+    },
+    {
+      "source": "3.1.2",
+      "target": "3.2.1",
+      "relation": "FS"
+    },
+    {
+      "source": "3.1.2",
+      "target": "3.2.2",
+      "relation": "FS"
+    },
+    {
+      "source": "3.2.1",
+      "target": "3.3.1",
+      "relation": "FS"
+    },
+    {
+      "source": "3.2.2",
+      "target": "3.3.1",
+      "relation": "FS"
+    },
+    {
+      "source": "3.3.2",
+      "target": "3.4.1",
+      "relation": "FS"
+    },
+    {
+      "source": "3.4.2",
+      "target": "3.5.1",
+      "relation": "FS"
+    }
+  ]
+}

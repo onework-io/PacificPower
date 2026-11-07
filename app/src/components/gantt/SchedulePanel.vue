@@ -3,6 +3,7 @@ import { downloadConstructionTemplate } from '@/lib/constructionTemplate'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useScheduleStore } from '@/stores/schedule'
 import { parseWbsXlsx } from '@/lib/wbsExcel'
+import AssessmentPlanView from './AssessmentPlanView.vue'
 import GanttPanel from './GanttPanel.vue'
 import WbsView from './WbsView.vue'
 import NetworkView from './NetworkView.vue'
@@ -45,6 +46,7 @@ const visibleTabs = computed(() => TABS.filter(({ key }) => {
   return can('wbs.view')
 }))
 
+const referenceMode = ref(true)
 const tab = ref<Tab>('gantt')
 const store = useScheduleStore()
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -110,6 +112,9 @@ async function reloadPublishedWbs() {
 
 <template>
   <div class="panel">
+    <div class="source-switch"><button @click="referenceMode = !referenceMode">{{ referenceMode ? '查看舊施工假設沙盒（非文件範圍）' : '返回 PISG 文件工作範圍' }}</button><span v-if="!referenceMode">舊版未核定假設，不屬 Rev1.3-H4；不得作為正式工期或進度。</span></div>
+    <AssessmentPlanView v-if="referenceMode" />
+    <template v-else>
     <nav class="panel__tabs">
       <button
         v-for="t in visibleTabs"
@@ -181,10 +186,13 @@ async function reloadPublishedWbs() {
         @published="reloadPublishedWbs"
       />
     </div>
+    </template>
   </div>
 </template>
 
 <style scoped>
+.source-switch { padding: 6px 14px; font-size: 11px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.source-switch button { color: var(--accent); cursor: pointer; margin-right: 12px; }
 .panel { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--panel-solid); }
 
 .panel__tabs {

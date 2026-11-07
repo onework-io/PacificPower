@@ -1,0 +1,32 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import plan from '@/data/assessmentPlan.json'
+import { PARTS } from '@/data/parts'
+import { useViewerStore } from '@/stores/viewer'
+const viewer=useViewerStore(), tab=ref('wbs'), basis=ref('WD'), query=ref('')
+const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&JSON.stringify(t).toLowerCase().includes(query.value.toLowerCase())))
+const docs=computed(()=>plan.documents.filter(d=>JSON.stringify(d).toLowerCase().includes(query.value.toLowerCase())))
+const maxDay=computed(()=>basis.value==='P'?35:80)
+const tabs=[['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
+function related(id:string){return ['site','shell'].includes(id)?'2.1.1、2.1.2':['power','power-routes'].includes(id)?'2.2.1、2.2.2、2.3.1':'2.3.1、2.3.2'}
+function focus(id:string){viewer.showAll();viewer.highlightedIds=new Set([id]);viewer.isolatedId=id;viewer.requestFreeFocus(id)}
+function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='PacificPower-PISG-Rev1.3-H4.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+</script>
+<template>
+<section class="assessment">
+<header><small>工作範圍依據 · {{plan.source.revision}} · {{plan.source.date}}</small><h2>資料中心前期策略與技術方向評估</h2><button @click="download">下載工作清冊 JSON</button></header>
+<p class="notice">容量待確認：來源文件為 <b>50 MW</b>；3D 保留使用者指定的 <b>250 MW 園區總容量</b>。模型供需求評估參照，不代表已核定設計或已完成施工。</p>
+<nav><button v-for="item in tabs" :key="item[0]" :class="{active:tab===item[0]}" @click="tab=item[0]!">{{item[1]}}</button></nav>
+<div class="tools"><template v-if="tab==='wbs'||tab==='gantt'"><button :class="{active:basis==='P'}" @click="basis='P'">委任前 P1–35</button><button :class="{active:basis==='WD'}" @click="basis='WD'">正式評估 WD1–80</button></template><input v-model="query" aria-label="搜尋工作或文件" placeholder="搜尋 WBS、文件、主責…" /></div>
+<div class="body">
+<template v-if="tab==='wbs'||tab==='gantt'"><p>50 項末階工作／審查／節點。每週 5 工作日；P 與 WD 分開計時。T0 待確認，不換算日曆日期；此為來源草案基準，非實際進度。</p>
+<table><thead><tr><th>WBS</th><th>工作／審查與主責</th><th>{{basis}} 起–迄</th><th>日數</th><th>{{tab==='gantt'?`${basis}1 → ${basis}${maxDay}（每格5工作日）`:'交付／來源'}}</th></tr></thead><tbody><tr v-for="t in rows" :key="t.code"><td>{{t.code}}</td><td><b>{{t.name}}</b><small>{{t.owner}}</small><small>{{plan.annotatedDependencies.filter(e=>e.target===t.code).map(e=>`${e.relation} ← ${e.source}`).join(' · ')}}</small></td><td>{{t.start}}–{{t.end}}</td><td>{{t.end-t.start+1}}</td><td v-if="tab==='gantt'"><div class="track" :style="{backgroundSize:`${500/maxDay}% 100%`}"><span :class="{milestone:t.start===t.end,buffer:t.code==='3.6'||t.code==='0.2'}" :style="{left:`${(t.start-1)/maxDay*100}%`,width:`${(t.end-t.start+1)/maxDay*100}%`}" :title="`${t.name}：${basis}${t.start}–${t.end}`" /></div></td><td v-else>{{t.documents.join('、')||'—'}}<small>來源第 {{t.page}} 頁</small></td></tr></tbody></table><p>FS／SS 僅轉錄原表明示的跨項標註，非完整可運算網圖。同日 G0／K2 在修訂完成後確認，不額外推移一天。</p></template>
+<template v-else-if="tab==='documents'"><p>5 份商務文件＋16 份基本交付＋4 份另行選配。此處為交付要求清冊，文件尚未編製或驗收。</p><table><thead><tr><th>編號／交付</th><th>工作內容與主責</th><th>時點／格式</th></tr></thead><tbody><tr v-for="d in docs" :key="d.code"><td>{{d.code}}<b>{{d.name}}</b><small>{{d.optional?'選配｜不納基本範圍與驗收':'基本範圍'}} · 來源第8頁</small></td><td>{{d.scope}}<small>{{d.owner}}</small></td><td>{{d.due}}<small>{{d.format}}</small></td></tr></tbody></table></template>
+<template v-else-if="tab==='mapping'"><p>此為本專案新增的評估參照關聯，不是 PDF 的構件施工綁定。文件完成不代表設備已安裝，管線與設備細節待後續設計確認。</p><table><thead><tr><th>3D 群組</th><th>參照 WBS</th><th>操作</th></tr></thead><tbody><tr v-for="p in PARTS" :key="p.id"><td>{{p.name}}</td><td>{{related(p.id)}}</td><td><button @click="focus(p.id)">定位模型</button></td></tr></tbody></table><button @click="viewer.showAll()">顯示全部模型</button></template>
+<template v-else><h3>啟動與接受條件</h3><ul><li>C0 詢價基準書面確認；C1 主約／分包差異核定；C2 兩約簽署完成。</li><li>R0 確認資料入口、具名人員與生效條件；T0 以正式通知為準。P31–35 緩衝動用時更新 T0。</li><li>G0 WD12：階段 A 驗收及完整啟動／限縮／暫停決策。階段 B 須 G0 核定且主約、分包生效；補件、共識與議約等待另排。</li><li>K1 WD23 → D1 WD35 → G1 WD40 → 修訂及兩約接受／K2 WD43 → K3 WD57 → D2 WD62 → QA WD73–74 → F WD75。</li><li>G1 未達共識時，受影響工作與時程另議。G2 為實際 F 後的後續行動／暫緩決策，基準 WD76–78。</li><li>WD76–80 為獨立緩衝，與 G2 重疊，不相加成 WD83。</li></ul><h3>分工與提交</h3><p>太電有權人負責階段決策、主約驗收與核款；太電 PMO 彙整資料與一次合併審查。PISG 負責商務、合約、進度、正式提交及收付款，文件未配置 PISG 技術團隊。HPE 主顧問整合技術與統一回覆，各專業編製並由適任人員獨立複核。正式提交經 PISG；主約由太電、分包由 PISG 依各自授權辦理。</p><h3>範圍與待確認</h3><p>來源為討論草案，不是已簽署合約。DOC-07 不含詳細負載表、配電設計及設備選型；DOC-17～20 另行委任、排程及驗收。Blender／GLB 模型尚不能作為施工放樣、碰撞驗證或竣工依據。待確認容量口徑、基地、人員授權、T0、資料充分性及正式工作範圍。</p></template>
+<footer>{{plan.source.title}} · {{plan.source.revision}} · {{plan.source.status}}<br/>UUID {{plan.source.uuid}} · 工作名稱略作縮寫，原始 WBS 編號與工作日保留。</footer>
+</div></section>
+</template>
+<style scoped>
+.assessment{height:100%;display:flex;flex-direction:column;background:var(--panel-solid);color:var(--text);font-size:12px;min-width:0;min-height:0}header{padding:12px 20px}h2{font-size:18px;margin:5px 0 10px}small{display:block;color:var(--muted);font-size:11px;margin-top:5px}button,input{border:1px solid var(--line);border-radius:5px;padding:7px 10px;background:transparent;color:inherit}button{cursor:pointer}button:hover,.active{background:#43c7ff20;border-color:#43c7ff;color:#7edaff}.notice{margin:0;padding:10px 20px;background:#d99b1618;color:#eac887;line-height:1.7}nav,.tools{display:flex;gap:8px;padding:10px 20px;flex-wrap:wrap;border-bottom:1px solid var(--line)}input{margin-left:auto;min-width:180px}.body{overflow:auto;padding:0 20px 20px;flex:1;min-height:0}p,li{line-height:1.8}table{border-collapse:collapse;width:100%;min-width:640px}th,td{text-align:left;padding:10px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:11px;white-space:nowrap}td:first-child{min-width:64px}td b{display:block;font-weight:500}.track{width:260px;height:25px;position:relative;background-image:linear-gradient(to right,#ffffff20 1px,transparent 1px)}.track span{position:absolute;top:5px;height:15px;background:#4eb8d9;border-radius:2px;min-width:3px}.track .milestone{background:#edab61}.track .buffer{background:#788797}footer{color:var(--muted);padding-top:24px;line-height:1.7}h3{margin-top:24px}
+</style>
