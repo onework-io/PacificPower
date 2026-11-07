@@ -50,6 +50,7 @@ function focus(id: string) {
   viewer.isolatedId = id
   viewer.requestFreeFocus(id)
 }
+function highlightTasks(codes:string[]){viewer.showAll();viewer.isolatedId=null;viewer.progressFilter=null;viewer.progressFilterSuppressed=true;selectedCode.value=null;viewer.highlightedIds=new Set(codes.flatMap(code=>pm.taskParts(code)));viewer.unlockCamera()}
 function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='PacificPower-PISG-Rev1.3-H4.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 </script>
 <template>
@@ -67,7 +68,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 <div class="body">
 <PmisWorkspace @open-inspections="tab='inspections'" v-if="tab==='home'||tab==='issues'" :mode="tab" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" />
 <PdmView v-else-if="tab==='pdm'" @open-task="code=>{selectTask(code);openDetail('task',code)}" />
-<ProgressCurvesView v-else-if="tab==='curves'" @open-task="code=>{selectTask(code);openDetail('task',code)}" />
+<ProgressCurvesView @highlight-tasks="highlightTasks" v-else-if="tab==='curves'" @open-task="code=>{selectTask(code);openDetail('task',code)}" />
 <DeliveryView @open-issue="id=>openDetail('issue',id)" v-else-if="tab==='delivery'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @navigate="target=>tab=target" />
 <InspectionsView v-else-if="tab==='inspections'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
 <MeetingsView v-else-if="tab==='meetings'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
