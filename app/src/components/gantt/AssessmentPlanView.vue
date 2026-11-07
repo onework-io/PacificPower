@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import PdmView from './PdmView.vue'
+import ProgressCurvesView from './ProgressCurvesView.vue'
 import DeliveryView from './DeliveryView.vue'
 import InspectionsView from './InspectionsView.vue'
 import MeetingsView from './MeetingsView.vue'
@@ -18,7 +20,7 @@ const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&(workStatus.
 const workStatus=ref('全部')
 const docs=computed(()=>plan.documents.filter(d=>JSON.stringify(d).toLowerCase().includes(query.value.toLowerCase())))
 const maxDay=computed(()=>basis.value==='P'?35:80)
-const tabs=[['home','角色工作台'],['delivery','交付與驗收總覽'],['issues','議題協調'],['meetings','會議與決策'],['inspections','查驗與缺失'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
+const tabs=[['home','角色工作台'],['curves','S 曲線／燃盡圖'],['delivery','交付與驗收總覽'],['issues','議題協調'],['meetings','會議與決策'],['inspections','查驗與缺失'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['pdm','PDM 關係圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
 const selectedCode = ref<string | null>(null)
 const selectedTask = computed(() => plan.tasks.find(t => t.code === selectedCode.value))
 function related(id:string){return plan.tasks.filter(t=>pm.taskParts(t.code).includes(id)).map(t=>t.code).join('、')||'未關聯'}
@@ -55,7 +57,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 <div class="plan-content" :inert="!!detail"><header><small>工作範圍依據 · {{plan.source.revision}} · {{plan.source.date}}</small><h2>資料中心前期策略與技術方向評估</h2><button @click="download">下載工作清冊 JSON</button></header>
 <p class="notice">容量待確認：來源文件為 <b>50 MW</b>；3D 保留使用者指定的 <b>250 MW 園區總容量</b>。模型供需求評估參照，不代表已核定設計或已完成施工。</p>
 <nav><button v-for="item in tabs" :key="item[0]" :class="{active:tab===item[0]}" @click="tab=item[0]!">{{item[1]}}</button></nav>
-<div class="tools"><select v-if="['wbs','gantt'].includes(tab)" v-model="workStatus" aria-label="工項狀態篩選"><option v-for="s in ['全部','未開始','執行中','待審查','已接受','退回修訂']" :key="s">{{s}}</option></select><template v-if="tab==='wbs'||tab==='gantt'"><button :class="{active:basis==='P'}" @click="basis='P'">委任前 P1–35</button><button :class="{active:basis==='WD'}" @click="basis='WD'">正式評估 WD1–80</button></template><input v-if="['wbs','gantt','documents'].includes(tab)" v-model="query" aria-label="搜尋工作或文件" placeholder="搜尋 WBS、文件、主責…" /></div>
+<nav v-if="['gantt','pdm','curves'].includes(tab)" aria-label="時程視圖切換"><button @click="tab='gantt'">甘特圖 · 工作日安排</button><button @click="tab='pdm'">PDM · 前置關係</button><button @click="tab='curves'">S 曲線／燃盡圖 · 進度追蹤</button></nav><div class="tools"><select v-if="['wbs','gantt'].includes(tab)" v-model="workStatus" aria-label="工項狀態篩選"><option v-for="s in ['全部','未開始','執行中','待審查','已接受','退回修訂']" :key="s">{{s}}</option></select><template v-if="tab==='wbs'||tab==='gantt'"><button :class="{active:basis==='P'}" @click="basis='P'">委任前 P1–35</button><button :class="{active:basis==='WD'}" @click="basis='WD'">正式評估 WD1–80</button></template><input v-if="['wbs','gantt','documents'].includes(tab)" v-model="query" aria-label="搜尋工作或文件" placeholder="搜尋 WBS、文件、主責…" /></div>
 <div v-if="selectedTask && (tab==='wbs'||tab==='gantt')" class="selection" aria-live="polite">
   <b>{{selectedTask.code}} · {{selectedTask.name}}</b>
   <template v-if="selectedParts.length"><small>已標示 {{selectedParts.length}} 組相關元件；點選下方元件可單獨定位。此為評估參照，不表示施工完成。</small><div class="part-links"><button v-for="p in selectedParts" :key="p.id" @click="focus(p.id)">{{p.name}}</button></div></template>
@@ -64,6 +66,8 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 </div>
 <div class="body">
 <PmisWorkspace @open-inspections="tab='inspections'" v-if="tab==='home'||tab==='issues'" :mode="tab" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" />
+<PdmView v-else-if="tab==='pdm'" @open-task="code=>{selectTask(code);openDetail('task',code)}" />
+<ProgressCurvesView v-else-if="tab==='curves'" @open-task="code=>{selectTask(code);openDetail('task',code)}" />
 <DeliveryView @open-issue="id=>openDetail('issue',id)" v-else-if="tab==='delivery'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @navigate="target=>tab=target" />
 <InspectionsView v-else-if="tab==='inspections'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
 <MeetingsView v-else-if="tab==='meetings'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
