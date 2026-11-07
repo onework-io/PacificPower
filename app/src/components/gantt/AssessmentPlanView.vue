@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import DeliveryView from './DeliveryView.vue'
 import InspectionsView from './InspectionsView.vue'
 import MeetingsView from './MeetingsView.vue'
 import PmisWorkspace from './PmisWorkspace.vue'
@@ -17,7 +18,7 @@ const rows=computed(()=>plan.tasks.filter(t=>t.basis===basis.value&&(workStatus.
 const workStatus=ref('全部')
 const docs=computed(()=>plan.documents.filter(d=>JSON.stringify(d).toLowerCase().includes(query.value.toLowerCase())))
 const maxDay=computed(()=>basis.value==='P'?35:80)
-const tabs=[['home','角色工作台'],['issues','議題協調'],['meetings','會議與決策'],['inspections','查驗與缺失'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
+const tabs=[['home','角色工作台'],['delivery','交付與驗收總覽'],['issues','議題協調'],['meetings','會議與決策'],['inspections','查驗與缺失'],['wbs','WBS 工作內容'],['gantt','工作日甘特圖'],['documents','交付文件'],['mapping','3D 評估對應'],['gates','節點與權責']]
 const selectedCode = ref<string | null>(null)
 const selectedTask = computed(() => plan.tasks.find(t => t.code === selectedCode.value))
 function related(id:string){return plan.tasks.filter(t=>pm.taskParts(t.code).includes(id)).map(t=>t.code).join('、')||'未關聯'}
@@ -63,6 +64,7 @@ function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(plan,
 </div>
 <div class="body">
 <PmisWorkspace @open-inspections="tab='inspections'" v-if="tab==='home'||tab==='issues'" :mode="tab" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" />
+<DeliveryView v-else-if="tab==='delivery'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @navigate="target=>tab=target" />
 <InspectionsView v-else-if="tab==='inspections'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
 <MeetingsView v-else-if="tab==='meetings'" @open-task="code=>{selectTask(code);openDetail('task',code)}" @open-document="code=>openDetail('document',code)" @open-asset="id=>{focus(id);openDetail('asset',id)}" @open-issues="tab='issues'" />
 <template v-else-if="tab==='wbs'||tab==='gantt'"><p>50 項末階工作／審查／節點。每週 5 工作日；P 與 WD 分開計時。T0 待確認，不換算日曆日期；此為來源草案基準，非實際進度。</p>
