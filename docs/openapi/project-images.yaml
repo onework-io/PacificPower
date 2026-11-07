@@ -1,0 +1,140 @@
+openapi: 3.1.0
+info:
+  title: Ampower Project Image API
+  version: 0.1.0
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /projects/{projectId}/images/cover:
+    get:
+      operationId: getProjectCover
+      summary: Get a short-lived signed URL for the private project cover
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Cover metadata and signed URL, or null when no cover exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoverResponse'
+  /projects/{projectId}/images/cover/upload-url:
+    post:
+      operationId: prepareProjectCoverUpload
+      summary: Prepare a direct upload to private S3-compatible Storage
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileName, mimeType, byteSize]
+              additionalProperties: false
+              properties:
+                fileName:
+                  type: string
+                  minLength: 1
+                  maxLength: 180
+                mimeType:
+                  enum: [image/jpeg, image/png, image/webp]
+                byteSize:
+                  type: integer
+                  minimum: 1
+                  maximum: 10485760
+                sha256:
+                  type: string
+                  pattern: '^[a-fA-F0-9]{64}$'
+      responses:
+        '201':
+          description: Short-lived PUT URL and required headers
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [fileId, uploadUrl, method, expiresIn, headers]
+                properties:
+                  fileId:
+                    type: string
+                    format: uuid
+                  uploadUrl:
+                    type: string
+                    format: uri
+                  method:
+                    const: PUT
+                  expiresIn:
+                    type: integer
+                  headers:
+                    type: object
+                    additionalProperties:
+                      type: string
+        '503':
+          description: Server-only Storage credentials have not been configured
+  /projects/{projectId}/images/cover/complete:
+    post:
+      operationId: completeProjectCoverUpload
+      summary: Verify an uploaded object and make it the project cover
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileId]
+              additionalProperties: false
+              properties:
+                fileId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: The new cover and its short-lived signed URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoverResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ProjectId:
+      in: path
+      name: projectId
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    CoverResponse:
+      type: object
+      required: [projectId, cover]
+      properties:
+        projectId:
+          type: string
+          format: uuid
+        cover:
+          oneOf:
+            - type: 'null'
+            - type: object
+              required: [fileId, url, mimeType, byteSize, expiresIn]
+              properties:
+                fileId:
+                  type: string
+                  format: uuid
+                url:
+                  type: string
+                  format: uri
+                mimeType:
+                  enum: [image/jpeg, image/png, image/webp]
+                byteSize:
+                  type: integer
+                expiresIn:
+                  type: integer

@@ -1,0 +1,366 @@
+openapi: 3.1.0
+info:
+  title: Ampower WBS Version Management API
+  version: 0.1.0
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /projects/{projectId}/wbs/versions:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      operationId: listWbsVersions
+      summary: List this project's WBS versions
+      responses:
+        '200':
+          description: Version history ordered newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WbsVersionSummary'
+    post:
+      operationId: createWbsDraft
+      summary: Create a draft from the active version, another version, or current live WBS
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              unevaluatedProperties: false
+              required: [source]
+              properties:
+                source:
+                  type: string
+                  enum: [manual, excel, copy, restore]
+                basedOnVersionId:
+                  type: [string, 'null']
+                  format: uuid
+                sourceFileId:
+                  type: [string, 'null']
+                  format: uuid
+                label:
+                  type: string
+                  maxLength: 120
+                changeNote:
+                  type: string
+                  maxLength: 2000
+      responses:
+        '201':
+          description: Draft created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WbsVersionDetail'
+        '409':
+          description: Source version or file belongs to another project
+  /projects/{projectId}/wbs/versions/{versionId}:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/VersionId'
+    get:
+      operationId: getWbsVersion
+      summary: Get metadata and immutable snapshot
+      responses:
+        '200':
+          description: Version detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WbsVersionDetail'
+    patch:
+      operationId: updateWbsDraft
+      summary: Update draft metadata or snapshot
+      parameters:
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              unevaluatedProperties: false
+              properties:
+                label:
+                  type: string
+                  maxLength: 120
+                changeNote:
+                  type: string
+                  maxLength: 2000
+                snapshot:
+                  $ref: '#/components/schemas/WbsSnapshot'
+      responses:
+        '200':
+          description: Draft updated
+        '409':
+          description: Version conflict or version is no longer editable
+    delete:
+      operationId: discardWbsDraft
+      summary: Discard a draft; published versions cannot be deleted
+      parameters:
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '204':
+          description: Draft discarded
+        '409':
+          description: Only draft or rejected versions can be discarded
+  /projects/{projectId}/wbs/versions/{versionId}/submit:
+    post:
+      operationId: submitWbsVersion
+      summary: Lock a draft and submit it for review
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/VersionId'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200':
+          description: Status changed to in_review
+  /projects/{projectId}/wbs/versions/{versionId}/approve:
+    post:
+      operationId: approveWbsVersion
+      summary: Approve a reviewed version
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/VersionId'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200':
+          description: Version approved and ready to publish
+        '403':
+          description: Reviewer lacks approval permission or is the draft author under separation-of-duties policy
+  /projects/{projectId}/wbs/versions/{versionId}/publish:
+    post:
+      operationId: publishWbsVersion
+      summary: Publish atomically and make this the active WBS version
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/VersionId'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200':
+          description: Published; previous published version becomes superseded
+        '409':
+          description: Validation failed, approval is missing, or version conflict occurred
+  /projects/{projectId}/wbs/versions/{versionId}/reject:
+    post:
+      operationId: rejectWbsVersion
+      summary: Return an in-review version to the planner with a reason
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/VersionId'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [note]
+              properties:
+                note:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+      responses:
+        '200':
+          description: Version returned with rejected status
+  /projects/{projectId}/wbs/versions/compare:
+    get:
+      operationId: compareWbsVersions
+      summary: Compare task, dependency, duration and mapping changes
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - in: query
+          name: from
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: to
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Structured WBS diff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WbsVersionDiff'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ProjectId:
+      in: path
+      name: projectId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    VersionId:
+      in: path
+      name: versionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+    IfMatch:
+      in: header
+      name: If-Match
+      required: true
+      schema:
+        type: string
+  schemas:
+    WbsVersionStatus:
+      type: string
+      enum: [draft, in_review, published, superseded, rejected]
+    WbsSnapshot:
+      type: object
+      required: [schemaVersion, tasks, dependencies]
+      properties:
+        schemaVersion:
+          type: integer
+          minimum: 1
+        projectStart:
+          type: [string, 'null']
+          format: date
+        tasks:
+          type: array
+          items:
+            type: object
+            required: [stableKey, code, sequence, name, durationDays]
+            properties:
+              stableKey:
+                type: string
+              code:
+                type: string
+              sequence:
+                type: integer
+              name:
+                type: string
+              phase:
+                type: string
+              durationDays:
+                type: number
+              weightPct:
+                type: [number, 'null']
+              modelPartKey:
+                type: [string, 'null']
+        dependencies:
+          type: array
+          items:
+            type: object
+            required: [predecessorStableKey, successorStableKey, relationType]
+            properties:
+              predecessorStableKey:
+                type: string
+              successorStableKey:
+                type: string
+              relationType:
+                type: string
+                enum: [FS]
+              lagDays:
+                type: number
+    WbsVersionSummary:
+      type: object
+      required: [id, projectId, versionNumber, label, status, source, version, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        versionNumber:
+          type: integer
+        label:
+          type: string
+        status:
+          $ref: '#/components/schemas/WbsVersionStatus'
+        source:
+          type: string
+        changeNote:
+          type: string
+        version:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        publishedAt:
+          type: [string, 'null']
+          format: date-time
+    WbsVersionDetail:
+      allOf:
+        - $ref: '#/components/schemas/WbsVersionSummary'
+        - type: object
+          required: [snapshot, changeSummary]
+          properties:
+            basedOnVersionId:
+              type: [string, 'null']
+              format: uuid
+            contentHash:
+              type: [string, 'null']
+            snapshot:
+              $ref: '#/components/schemas/WbsSnapshot'
+            changeSummary:
+              type: object
+    WbsVersionDiff:
+      type: object
+      required: [from, to, added, removed, changed, dependencyChanges]
+      properties:
+        from:
+          $ref: '#/components/schemas/WbsVersionReference'
+        to:
+          $ref: '#/components/schemas/WbsVersionReference'
+        added:
+          type: array
+          items: { type: object }
+        removed:
+          type: array
+          items: { type: object }
+        changed:
+          type: array
+          items:
+            type: object
+        dependencyChanges:
+          type: object
+          required: [added, removed]
+          properties:
+            added:
+              type: array
+              items: { type: object }
+            removed:
+              type: array
+              items: { type: object }
+    WbsVersionReference:
+      type: object
+      required: [id, versionNumber, label]
+      properties:
+        id:
+          type: string
+          format: uuid
+        versionNumber:
+          type: integer
+        label:
+          type: string

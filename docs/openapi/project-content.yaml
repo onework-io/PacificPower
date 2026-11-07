@@ -1,0 +1,249 @@
+openapi: 3.1.0
+info:
+  title: Ampower Project WBS and 3D Configuration API
+  version: 0.1.0
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /model-templates:
+    get:
+      operationId: listModelTemplates
+      summary: List active reusable 3D templates for the organization
+      responses:
+        '200':
+          description: Active templates with part counts
+  /projects/{projectId}/models/active:
+    get:
+      operationId: getActiveProjectModel
+      summary: Get the active project model version and its parts
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Active model version and project-scoped parts
+  /projects/{projectId}/models/apply-template:
+    post:
+      operationId: applyModelTemplate
+      summary: Create and publish a project-owned model version from a shared template
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema:
+            type: string
+            minLength: 16
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [templateCode]
+              properties:
+                templateCode:
+                  type: string
+      responses:
+        '201':
+          description: Template applied as a new published project model version
+  /projects/{projectId}/settings:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      operationId: getProjectSettings
+      summary: Get project-specific WBS and 3D settings
+      responses:
+        '200':
+          description: Project settings
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSettings'
+    patch:
+      operationId: updateProjectSettings
+      summary: Update project-specific WBS and viewer settings
+      parameters:
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectSettingsPatch'
+      responses:
+        '200':
+          description: Updated settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSettings'
+        '409':
+          description: Settings version conflict
+  /projects/{projectId}/content:
+    get:
+      operationId: getProjectContentSelection
+      summary: Get active WBS baseline and active 3D model version
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Active project content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectContentSelection'
+    patch:
+      operationId: updateProjectContentSelection
+      summary: Select the active WBS baseline and 3D model version
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              unevaluatedProperties: false
+              properties:
+                activeScheduleBaselineId:
+                  type: [string, 'null']
+                  format: uuid
+                activeModelVersionId:
+                  type: [string, 'null']
+                  format: uuid
+      responses:
+        '200':
+          description: Updated active content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectContentSelection'
+        '409':
+          description: Version conflict or selected content belongs to another project
+  /projects/{projectId}/models/{modelVersionId}/part-mappings:
+    put:
+      operationId: replaceModelPartMappings
+      summary: Map this project's 3D parts to this project's WBS tasks
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - in: path
+          name: modelVersionId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mappings]
+              properties:
+                mappings:
+                  type: array
+                  maxItems: 10000
+                  items:
+                    type: object
+                    required: [partId]
+                    properties:
+                      partId:
+                        type: string
+                        format: uuid
+                      taskId:
+                        type: [string, 'null']
+                        format: uuid
+      responses:
+        '200':
+          description: Mappings replaced atomically
+        '409':
+          description: A model, part or task belongs to another project
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ProjectId:
+      in: path
+      name: projectId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IfMatch:
+      in: header
+      name: If-Match
+      required: true
+      schema:
+        type: string
+  schemas:
+    ProjectSettingsFields:
+      type: object
+      properties:
+        timezone:
+          type: string
+          maxLength: 64
+        workHoursPerDay:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 24
+        workDays:
+          type: array
+          uniqueItems: true
+          items:
+            type: integer
+            minimum: 0
+            maximum: 6
+        wbsCodePrefix:
+          type: string
+          maxLength: 20
+        autoRecalculateSchedule:
+          type: boolean
+        viewerInitialCamera:
+          type: object
+        cameraTourEnabled:
+          type: boolean
+    ProjectSettingsPatch:
+      allOf:
+        - $ref: '#/components/schemas/ProjectSettingsFields'
+      minProperties: 1
+      unevaluatedProperties: false
+    ProjectSettings:
+      allOf:
+        - $ref: '#/components/schemas/ProjectSettingsFields'
+        - type: object
+          required: [projectId, version]
+          properties:
+            projectId:
+              type: string
+              format: uuid
+            version:
+              type: integer
+              minimum: 1
+      unevaluatedProperties: false
+    ProjectContentSelection:
+      type: object
+      required: [projectId, version]
+      properties:
+        projectId:
+          type: string
+          format: uuid
+        activeScheduleBaselineId:
+          type: [string, 'null']
+          format: uuid
+        activeModelVersionId:
+          type: [string, 'null']
+          format: uuid
+        version:
+          type: integer
+          minimum: 1

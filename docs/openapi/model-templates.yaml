@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: Ampower 3D Model Template API
+  version: 0.1.0
+servers:
+  - url: /api/v1
+security:
+  - cookieSession: []
+paths:
+  /model-templates:
+    get:
+      operationId: listModelTemplates
+      summary: List reusable 3D templates available to the organization
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [active, retired]
+            default: active
+      responses:
+        '200':
+          description: Model templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModelTemplate'
+  /projects/{projectId}/models/apply-template:
+    post:
+      operationId: applyModelTemplate
+      summary: Copy a reusable Ampower model template into this project
+      description: Creates a project-owned immutable model version while sharing read-only Storage objects. Existing project versions are retained.
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema:
+            type: string
+            minLength: 16
+            maxLength: 128
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              unevaluatedProperties: false
+              required: [templateId]
+              properties:
+                templateId:
+                  type: string
+                  format: uuid
+                setActive:
+                  type: boolean
+                  default: true
+                applyDefaultWbsMappings:
+                  type: boolean
+                  default: true
+      responses:
+        '201':
+          description: Project model version created from the template
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [projectId, modelVersionId, templateId, status]
+                properties:
+                  projectId:
+                    type: string
+                    format: uuid
+                  modelVersionId:
+                    type: string
+                    format: uuid
+                  templateId:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [ready, published]
+                  mappedPartCount:
+                    type: integer
+                    minimum: 0
+                  unmappedStableKeys:
+                    type: array
+                    items:
+                      type: string
+        '409':
+          description: Template is inactive, outside the organization, or mappings do not match this project's WBS
+components:
+  securitySchemes:
+    cookieSession:
+      type: apiKey
+      in: cookie
+      name: ampower_session
+  schemas:
+    ModelTemplate:
+      type: object
+      required: [id, code, name, generatorModel, partCount, status, version]
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        generatorModel:
+          type: string
+        partCount:
+          type: integer
+          minimum: 0
+        previewUrl:
+          type: [string, 'null']
+          format: uri
+        status:
+          type: string
+          enum: [active, retired]
+        version:
+          type: integer
+          minimum: 1

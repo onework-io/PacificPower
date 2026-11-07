@@ -1,0 +1,221 @@
+openapi: 3.1.0
+info:
+  title: Ampower Account and RBAC API
+  version: 0.1.0
+  description: Account lifecycle, role presets and per-account permission overrides.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /auth/me:
+    get:
+      operationId: getCurrentAccount
+      summary: Resolve the Supabase Auth subject to the current organization account
+      responses:
+        '200':
+          description: Current account, organization, role and effective permissions
+        '401':
+          description: Token invalid, expired, inactive or not linked to an organization account
+  /accounts/catalog:
+    get:
+      operationId: getAccessControlCatalog
+      summary: List roles, permissions and role defaults
+      responses:
+        '200':
+          description: Access control catalog
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /accounts:
+    get:
+      operationId: listAccounts
+      summary: List accounts in the current organization
+      responses:
+        '200':
+          description: Organization accounts and their overrides
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      operationId: createAccount
+      summary: Create an invited account and assign its base role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountCreate'
+      responses:
+        '201':
+          description: Account created in invited state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: Email already exists
+  /accounts/{userId}:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    patch:
+      operationId: updateAccount
+      summary: Update account profile, role or state
+      description: The caller cannot disable itself or demote the organization's final Admin.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdate'
+      responses:
+        '200':
+          description: Account updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          description: Account is not a member of the organization
+        '409':
+          description: Self-disable or final-Admin protection
+  /accounts/{userId}/permissions:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    put:
+      operationId: replaceAccountPermissionOverrides
+      summary: Replace all individual permission overrides for an account
+      description: Explicit deny takes precedence over allow and the base role.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              unevaluatedProperties: false
+              required: [overrides]
+              properties:
+                overrides:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PermissionOverride'
+      responses:
+        '200':
+          description: Overrides replaced
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    UserId:
+      in: path
+      name: userId
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Forbidden:
+      description: Required permission is missing or explicitly denied
+  schemas:
+    Role:
+      type: string
+      enum: [admin, planner, manager, worker]
+    AccountStatus:
+      type: string
+      enum: [invited, active, suspended, locked, disabled]
+    AccountCreate:
+      type: object
+      unevaluatedProperties: false
+      required: [email, displayName, role]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        displayName:
+          type: string
+          maxLength: 120
+        role:
+          $ref: '#/components/schemas/Role'
+        phone:
+          type: string
+          maxLength: 40
+        department:
+          type: string
+          maxLength: 120
+        crewName:
+          type: string
+          maxLength: 120
+    AccountUpdate:
+      type: object
+      unevaluatedProperties: false
+      properties:
+        displayName:
+          type: string
+          maxLength: 120
+        role:
+          $ref: '#/components/schemas/Role'
+        status:
+          $ref: '#/components/schemas/AccountStatus'
+        phone:
+          type: string
+          maxLength: 40
+        department:
+          type: string
+          maxLength: 120
+        crewName:
+          type: string
+          maxLength: 120
+    PermissionOverride:
+      type: object
+      unevaluatedProperties: false
+      required: [permissionCode, effect]
+      properties:
+        permissionCode:
+          type: string
+          maxLength: 100
+        effect:
+          type: string
+          enum: [allow, deny]
+        scopeType:
+          type: string
+          enum: [organization, project, assigned_task]
+          default: organization
+        projectId:
+          type: string
+          format: uuid
+        expiresAt:
+          type: string
+          format: date-time
+        reason:
+          type: string
+          maxLength: 500
+    Account:
+      allOf:
+        - $ref: '#/components/schemas/AccountCreate'
+        - type: object
+          required: [id, status, mfaEnabled, overrides]
+          properties:
+            id:
+              type: string
+              format: uuid
+            status:
+              $ref: '#/components/schemas/AccountStatus'
+            mfaEnabled:
+              type: boolean
+            lastLoginAt:
+              type: [string, 'null']
+              format: date-time
+            overrides:
+              type: array
+              items:
+                $ref: '#/components/schemas/PermissionOverride'

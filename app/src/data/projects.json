@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-07T00:00:00+08:00",
+  "projects": [
+    {
+      "id": "pacific-dc250",
+      "code": "PP-DC250-CONCEPT",
+      "name": "250 MW 資料中心建設",
+      "description": "施工協調概念模型｜8 個機房區、2,000 機櫃位置。250 MW 園區容量／200 MW IT 規劃值；排程待核定，尚未接入現場資料。",
+      "client": "待指定",
+      "location": "基地待定",
+      "model": "250 MW 園區 · 200 MW IT（假設）",
+      "crew": "待指派",
+      "coverImage": "./project-images/campus.png",
+      "status": "規劃中",
+      "progress": 0,
+      "scheduleDelta": 0,
+      "budget": 0,
+      "spent": 0,
+      "startDate": "2026/11/07",
+      "endDate": "2027/11/07",
+      "manager": "待指派",
+      "risk": "注意",
+      "updatedAt": "概念模型",
+      "accent": "#43c7ff",
+      "lat": 0,
+      "lng": 0
+    }
+  ]
+}

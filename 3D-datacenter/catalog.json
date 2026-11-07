@@ -1,0 +1,87 @@
+[
+  {
+    "id": "site",
+    "file": "site.glb",
+    "bytes": 108436
+  },
+  {
+    "id": "shell",
+    "file": "shell.glb",
+    "bytes": 43468
+  },
+  {
+    "id": "dc01-racks",
+    "file": "dc01-racks.glb",
+    "bytes": 1425856
+  },
+  {
+    "id": "dc02-racks",
+    "file": "dc02-racks.glb",
+    "bytes": 1425848
+  },
+  {
+    "id": "dc03-racks",
+    "file": "dc03-racks.glb",
+    "bytes": 1425844
+  },
+  {
+    "id": "dc04-racks",
+    "file": "dc04-racks.glb",
+    "bytes": 1425844
+  },
+  {
+    "id": "dc05-racks",
+    "file": "dc05-racks.glb",
+    "bytes": 1425864
+  },
+  {
+    "id": "dc06-racks",
+    "file": "dc06-racks.glb",
+    "bytes": 1425856
+  },
+  {
+    "id": "dc07-racks",
+    "file": "dc07-racks.glb",
+    "bytes": 1425852
+  },
+  {
+    "id": "dc08-racks",
+    "file": "dc08-racks.glb",
+    "bytes": 1425852
+  },
+  {
+    "id": "power",
+    "file": "power.glb",
+    "bytes": 567372
+  },
+  {
+    "id": "cooling",
+    "file": "cooling.glb",
+    "bytes": 719660
+  },
+  {
+    "id": "network",
+    "file": "network.glb",
+    "bytes": 33516
+  },
+  {
+    "id": "fws",
+    "file": "fws.glb",
+    "bytes": 325868
+  },
+  {
+    "id": "tcs",
+    "file": "tcs.glb",
+    "bytes": 347672
+  },
+  {
+    "id": "power-routes",
+    "file": "power-routes.glb",
+    "bytes": 353772
+  },
+  {
+    "id": "fiber",
+    "file": "fiber.glb",
+    "bytes": 122132
+  }
+]

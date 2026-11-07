@@ -1,0 +1,16 @@
+{
+  "facility_MW": 250,
+  "assumed_design_ratio": 1.25,
+  "IT_MW": 200,
+  "non_IT_budget_MW": 50,
+  "blocks": 8,
+  "IT_MW_per_block": 25,
+  "rack_positions_per_block": 250,
+  "rack_positions": 2000,
+  "average_rack_kW": 100,
+  "site_dimensions_m": [
+    440,
+    310
+  ],
+  "equipment_ratings": "TBD; plant symbols represent grouped spatial allowances"
+}

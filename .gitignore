@@ -1,0 +1,20 @@
+.DS_Store
+node_modules
+dist/
+*.tsbuildinfo
+
+# 大型原始動畫與簡報建置／輸出不納入版本控制
+animation/
+.codex-ppt-build/
+outputs/presentation/
+supabase/.temp/
+
+# 本機祕密（Cloudflare API token 等），切勿提交
+.env
+.env.*
+!.env.example
+.wrangler/
+
+# Generated Blender renders and backups
+output/
+*.blend1

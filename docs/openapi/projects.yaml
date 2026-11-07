@@ -1,0 +1,388 @@
+openapi: 3.1.0
+info:
+  title: Ampower Project Portfolio API
+  version: 0.1.0
+  description: Project creation, editing, archiving and restore contract for the first backend vertical slice.
+servers:
+  - url: /api/v1
+security:
+  - cookieSession: []
+paths:
+  /projects:
+    get:
+      operationId: listProjects
+      summary: List projects visible to the current user
+      parameters:
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/ProjectStatus'
+        - in: query
+          name: q
+          schema:
+            type: string
+            maxLength: 100
+        - in: query
+          name: includeArchived
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: cursor
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 30
+      responses:
+        '200':
+          description: Project page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createProject
+      summary: Create a project
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+      responses:
+        '201':
+          description: Project created
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Project code or idempotency key conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /projects/{projectId}:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      operationId: getProject
+      summary: Get project details
+      responses:
+        '200':
+          description: Project details
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateProject
+      summary: Update editable project fields
+      parameters:
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+      responses:
+        '200':
+          description: Updated project
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/VersionConflict'
+        '428':
+          description: If-Match header is required
+    delete:
+      operationId: archiveProject
+      summary: Soft-delete a project and hide it from active lists
+      description: Sets status to archived and records deleted_at/deleted_by. Related rows and Storage objects are retained.
+      parameters:
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                reason:
+                  type: string
+                  maxLength: 500
+      responses:
+        '200':
+          description: Project archived
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/VersionConflict'
+  /projects/{projectId}/restore:
+    post:
+      operationId: restoreProject
+      summary: Restore an archived project
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200':
+          description: Project restored
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/VersionConflict'
+components:
+  securitySchemes:
+    cookieSession:
+      type: apiKey
+      in: cookie
+      name: ampower_session
+  parameters:
+    ProjectId:
+      in: path
+      name: projectId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+    IfMatch:
+      in: header
+      name: If-Match
+      required: true
+      description: Version ETag returned by the latest read, for example W/"7".
+      schema:
+        type: string
+  headers:
+    ETag:
+      description: Weak ETag generated from the project version.
+      schema:
+        type: string
+        example: W/"7"
+  schemas:
+    ProjectStatus:
+      type: string
+      enum: [planning, active, inspection, completed, archived]
+    RiskStatus:
+      type: string
+      enum: [normal, attention, high]
+    ProjectWritableFields:
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: '^[A-Z0-9][A-Z0-9_-]{2,39}$'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 2000
+        clientName:
+          type: string
+          maxLength: 120
+        location:
+          type: string
+          maxLength: 200
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+        generatorModel:
+          type: string
+          maxLength: 120
+        crewName:
+          type: string
+          maxLength: 120
+        contractAmount:
+          type: number
+          minimum: 0
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        riskStatus:
+          $ref: '#/components/schemas/RiskStatus'
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        managerId:
+          type: [string, 'null']
+          format: uuid
+    ProjectCreate:
+      allOf:
+        - $ref: '#/components/schemas/ProjectWritableFields'
+      required: [code, name]
+      unevaluatedProperties: false
+    ProjectUpdate:
+      allOf:
+        - $ref: '#/components/schemas/ProjectWritableFields'
+      minProperties: 1
+      unevaluatedProperties: false
+    Project:
+      allOf:
+        - $ref: '#/components/schemas/ProjectWritableFields'
+        - type: object
+          required: [id, organizationId, code, name, version, createdAt, updatedAt]
+          properties:
+            id:
+              type: string
+              format: uuid
+            organizationId:
+              type: string
+              format: uuid
+            progressPct:
+              type: number
+              minimum: 0
+              maximum: 100
+            coverImageUrl:
+              type: [string, 'null']
+              format: uri
+            version:
+              type: integer
+              minimum: 1
+            deletedAt:
+              type: [string, 'null']
+              format: date-time
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+      unevaluatedProperties: false
+    ProjectPage:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+        nextCursor:
+          type: [string, 'null']
+    Problem:
+      type: object
+      required: [type, title, status, requestId]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        requestId:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Project role does not allow this operation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Project does not exist or is outside the current organization
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    VersionConflict:
+      description: The project was changed by another user
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
